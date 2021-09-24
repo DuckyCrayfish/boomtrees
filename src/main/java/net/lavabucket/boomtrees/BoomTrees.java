@@ -1,23 +1,23 @@
 /*
- * Copyright (C) 2021 Your Name
+ * Copyright (C) 2021 Nick Iacullo
  *
- * This file is part of examplemod.
+ * This file is part of BoomTrees.
  *
- * examplemod is free software: you can redistribute it and/or modify
+ * BoomTrees is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * examplemod is distributed in the hope that it will be useful,
+ * BoomTrees is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with examplemod.  If not, see <https://www.gnu.org/licenses/>.
+ * along with BoomTrees.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.example.examplemod;
+package net.lavabucket.boomtrees;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -31,18 +31,18 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
 /** This class contains the mod entry point and general mod constants. */
-@Mod(ExampleMod.MOD_ID)
-public class ExampleMod {
+@Mod(BoomTrees.MOD_ID)
+public class BoomTrees {
 
     /** Mod identifier. The value here should match an entry in the META-INF/mods.toml file. */
-    public static final String MOD_ID = "examplemod";
+    public static final String MOD_ID = "boomtrees";
     /** Log4j marker for mod logs. */
     public static final Marker MARKER = MarkerManager.getMarker(MOD_ID);
 
     private static final Logger LOGGER = LogManager.getLogger();
 
     /** Mod entry point. */
-    public ExampleMod() {
+    public BoomTrees() {
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         final IEventBus forgeBus = MinecraftForge.EVENT_BUS;
 

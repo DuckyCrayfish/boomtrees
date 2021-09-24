@@ -1,7 +1,7 @@
 // Project details
-def modId = 'modid'
-def vendor = 'examplemodsareus'
-def groupId = 'com.yourname.modid'
+def modId = 'boomtrees'
+def vendor = 'lavabucket.net'
+def groupId = 'net.lavabucket.forge.boomtrees'
 def modVersion = '0.0.1.0'
 def minecraftVersion = '1.17.1'
 def forgeVersion = '37.0.70'
@@ -81,7 +81,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                examplemod {
+                boomtrees {
                     source sourceSets.main
                 }
             }
@@ -103,7 +103,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                examplemod {
+                boomtrees {
                     source sourceSets.main
                 }
             }
@@ -125,10 +125,10 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'boomtrees', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
-                examplemod {
+                boomtrees {
                     source sourceSets.main
                 }
             }

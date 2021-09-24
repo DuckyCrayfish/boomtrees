@@ -18,7 +18,7 @@ license="LGPL-3.0-or-later"
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 # The modid of the mod
-modId="examplemod" #mandatory
+modId="boomtrees" #mandatory
 
 # The version number of the mod - May use hardcoded values or variable substitution.
 # A few well known ${} variables are useable here. ${file.jarVersion} will substitute the value of
@@ -26,7 +26,7 @@ modId="examplemod" #mandatory
 version="${file.jarVersion}" #mandatory
 
  # A display name for the mod
-displayName="Example Mod" #mandatory
+displayName="BoomTrees" #mandatory
 
 # A URL to query for updates for this mod. See the JSON update specification:
 # https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
@@ -42,7 +42,7 @@ displayName="Example Mod" #mandatory
 #credits="Thanks for this example mod goes to Java" #optional
 
 # A text field displayed in the mod UI
-#authors="DuckyCrayfish" #optional
+authors="DuckyCrayfish, FeelGood" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
@@ -50,7 +50,7 @@ This is a long form description of the mod. You can write whatever you want here
 '''
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.examplemod]] #optional
+[[dependencies.boomtrees]] #optional
     # The modid of the dependency
     modId="forge" #mandatory
     # Does this dependency have to exist - if not, ordering below must be specified.
@@ -63,7 +63,7 @@ This is a long form description of the mod. You can write whatever you want here
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
 
-[[dependencies.examplemod]]
+[[dependencies.boomtrees]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.17.1,1.18)"
