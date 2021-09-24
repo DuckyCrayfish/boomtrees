@@ -38,8 +38,8 @@ public class BoomTrees {
     public BoomTrees() {
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        modBus.register(Blocks.class);
-        modBus.register(Items.class);
+        modBus.register(BlockList.class);
+        modBus.register(ItemList.class);
     }
 
 }

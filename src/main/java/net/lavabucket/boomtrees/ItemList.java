@@ -30,10 +30,10 @@ import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class Items {
+public final class ItemList {
 
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BoomTrees.MOD_ID);
-    public static final RegistryObject<Item> BOOM_LOG_ITEM = ITEMS.register("boom_log", () -> new BlockItem(Blocks.BOOM_LOG.get(), (new Item.Properties()).tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> BOOM_LOG_ITEM = ITEMS.register("boom_log", () -> new BlockItem(BlockList.BOOM_LOG.get(), (new Item.Properties()).tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
 
     @SubscribeEvent
     public static void onConstructModEvent(FMLConstructModEvent event) {
