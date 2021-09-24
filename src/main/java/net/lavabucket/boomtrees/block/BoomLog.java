@@ -26,6 +26,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -57,6 +58,7 @@ public class BoomLog extends RotatedPillarBlock {
 
     public void explode(BlockState state, Level level, BlockPos position) {
         level.explode(null, position.getX() + 0.5D, position.getY() + 0.5D, position.getZ() + 0.5D, 2.0F, Explosion.BlockInteraction.NONE);
+        level.setBlockAndUpdate(position, Blocks.STRIPPED_OAK_LOG.defaultBlockState());
     }
 
 }
