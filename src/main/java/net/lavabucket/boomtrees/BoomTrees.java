@@ -22,11 +22,7 @@ package net.lavabucket.boomtrees;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fmlserverevents.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
@@ -39,23 +35,10 @@ public class BoomTrees {
     /** Log4j marker for mod logs. */
     public static final Marker MARKER = MarkerManager.getMarker(MOD_ID);
 
-    private static final Logger LOGGER = LogManager.getLogger();
-
     /** Mod entry point. */
     public BoomTrees() {
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         final IEventBus forgeBus = MinecraftForge.EVENT_BUS;
-
-        modBus.addListener(this::setup);
-        forgeBus.addListener(this::onServerStarting);
-    }
-
-    private void setup(final FMLCommonSetupEvent event) {
-        LOGGER.info(MARKER, "HELLO FROM PREINIT");
-    }
-
-    private void onServerStarting(FMLServerStartingEvent event) {
-        LOGGER.info(MARKER, "HELLO FROM SERVER START");
     }
 
 }
