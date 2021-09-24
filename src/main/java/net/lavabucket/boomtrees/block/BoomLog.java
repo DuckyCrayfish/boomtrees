@@ -58,7 +58,8 @@ public class BoomLog extends RotatedPillarBlock {
 
     public void explode(BlockState state, Level level, BlockPos position) {
         level.explode(null, position.getX() + 0.5D, position.getY() + 0.5D, position.getZ() + 0.5D, 2.0F, Explosion.BlockInteraction.NONE);
-        level.setBlockAndUpdate(position, Blocks.STRIPPED_OAK_LOG.defaultBlockState());
+        BlockState strippedState = Blocks.STRIPPED_OAK_LOG.defaultBlockState().setValue(RotatedPillarBlock.AXIS, state.getValue(RotatedPillarBlock.AXIS));
+        level.setBlockAndUpdate(position, strippedState);
     }
 
 }
