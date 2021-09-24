@@ -24,12 +24,15 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.ToolActions;
 
 public class BoomLog extends RotatedPillarBlock {
 
@@ -38,9 +41,9 @@ public class BoomLog extends RotatedPillarBlock {
     }
 
     @Override
-    public void onProjectileHit(Level level, BlockState state, BlockHitResult blockHitResult, Projectile projectile) {
+    public void onProjectileHit(Level level, BlockState state, BlockHitResult hitResult, Projectile projectile) {
         if (!level.isClientSide()) {
-            BlockPos position = blockHitResult.getBlockPos();
+            BlockPos position = hitResult.getBlockPos();
             explode(state, level, position);
         }
     }
@@ -56,10 +59,26 @@ public class BoomLog extends RotatedPillarBlock {
         explode(state, level, position);
     }
 
+    @Override
+    public BlockState getToolModifiedState(BlockState state, Level world, BlockPos position,
+            Player player, ItemStack stack, ToolAction toolAction) {
+
+        if (stack.canPerformAction(toolAction) && ToolActions.AXE_STRIP.equals(toolAction)) {
+            return getStrippedState(state);
+        } else {
+            return super.getToolModifiedState(state, world, position, player, stack, toolAction);
+        }
+    }
+
     public void explode(BlockState state, Level level, BlockPos position) {
         level.explode(null, position.getX() + 0.5D, position.getY() + 0.5D, position.getZ() + 0.5D, 2.0F, Explosion.BlockInteraction.NONE);
-        BlockState strippedState = Blocks.STRIPPED_OAK_LOG.defaultBlockState().setValue(RotatedPillarBlock.AXIS, state.getValue(RotatedPillarBlock.AXIS));
+        BlockState strippedState = getStrippedState(state);
         level.setBlockAndUpdate(position, strippedState);
+    }
+
+    public BlockState getStrippedState(BlockState state) {
+        return Blocks.STRIPPED_OAK_LOG.defaultBlockState()
+                .setValue(RotatedPillarBlock.AXIS, state.getValue(RotatedPillarBlock.AXIS));
     }
 
 }
