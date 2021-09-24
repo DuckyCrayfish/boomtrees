@@ -19,7 +19,6 @@
 
 package net.lavabucket.boomtrees;
 
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -38,7 +37,9 @@ public class BoomTrees {
     /** Mod entry point. */
     public BoomTrees() {
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
-        final IEventBus forgeBus = MinecraftForge.EVENT_BUS;
+
+        modBus.register(Blocks.class);
+        modBus.register(Items.class);
     }
 
 }

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "boomtrees:block/boom_log_top",
+    "side": "boomtrees:block/boom_log"
+  }
+}
