@@ -33,6 +33,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -51,9 +52,27 @@ import net.minecraftforge.common.ToolActions;
 public class BoomLog extends RotatedPillarBlock {
 
     public static final ResourceLocation STRIP_LOOT_TABLE = new ResourceLocation("boomtrees", "gameplay/boomlog_strip");
+    private final int flammability;
+    private final int fireSpreadSpeed;
 
     public BoomLog(Properties properties) {
+        this(400, 5, properties);
+    }
+
+    public BoomLog(int flammability, int fireSpreadSpeed, Properties properties) {
         super(properties);
+        this.flammability = flammability;
+        this.fireSpreadSpeed = fireSpreadSpeed;
+    }
+
+    @Override
+    public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction face) {
+        return flammability;
+    }
+
+    @Override
+    public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction face) {
+        return fireSpreadSpeed;
     }
 
     @Override
