@@ -51,32 +51,55 @@ import net.minecraftforge.common.ToolActions;
 
 public class BoomLog extends RotatedPillarBlock {
 
+    /** The default loot table used for log stripping when no custom loot table is provided. */
     public static final ResourceLocation DEFAULT_STRIP_LOOT_TABLE =
             new ResourceLocation("boomtrees", "gameplay/boomtrees/strip/default");
 
     private final int flammability;
     private final int fireSpreadSpeed;
 
+    /**
+     * Instantiates a new block object.
+     * @param properties  the properties of the new block
+     */
     public BoomLog(Properties properties) {
         this(400, 5, properties);
     }
 
+    /**
+     * Instantiates a new block object.
+     *
+     * @param flammability  the flammability of the new block
+     * @param fireSpreadSpeed  the speed at which fire spreads from the new block
+     * @param properties  the properties of the new block
+     */
     public BoomLog(int flammability, int fireSpreadSpeed, Properties properties) {
         super(properties);
         this.flammability = flammability;
         this.fireSpreadSpeed = fireSpreadSpeed;
     }
 
+    /** {@return the flammability of this block} */
     @Override
     public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction face) {
         return flammability;
     }
 
+    /** {@return the fire spread speed of this block} */
     @Override
     public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction face) {
         return fireSpreadSpeed;
     }
 
+    /**
+     * This method is called when this block is hit by a projectile.
+     * <p>This method triggers a bark explosion.
+     *
+     * @param level  the level in which the block exists
+     * @param blockState  the {@code BlockState} of the block
+     * @param hitResult  the {@code BlockHitResult} of the projectile landing
+     * @param projectile  the projectile that landed
+     */
     @Override
     public void onProjectileHit(Level level, BlockState blockState, BlockHitResult hitResult,
             Projectile projectile) {
@@ -87,6 +110,16 @@ public class BoomLog extends RotatedPillarBlock {
         }
     }
 
+    /**
+     * This method is called when this block is consumed by fire.
+     * <p>This method triggers a bark explosion.
+     *
+     * @param level  the level in which the block exists
+     * @param blockState  the {@code BlockState} of the block
+     * @param position  the position of the block
+     * @param face  the face that caught on fire
+     * @param igniter  the entity that ignited the block
+     */
     @Override
     public void catchFire(BlockState blockState, Level level, BlockPos position, Direction face,
             LivingEntity igniter) {
@@ -94,11 +127,34 @@ public class BoomLog extends RotatedPillarBlock {
         super.catchFire(blockState, level, position, face, igniter);
     }
 
+    /**
+     * This method is called when this block is attacked by a player.
+     * <p>This method triggers a bark explosion.
+     *
+     * @param blockState  the {@code BlockState} of the block
+     * @param level  the level in which the block exists
+     * @param position  the position of the block
+     * @param player  the player who attacked the block
+     */
     @Override
     public void attack(BlockState blockState, Level level, BlockPos position, Player player) {
         explode(blockState, level, position);
     }
 
+    /**
+     * This method is called when a player uses a tool on this block.
+     *
+     * <p>This method strips the bark off this block and drops loot when called upon by an axe strip
+     * {@code ToolAction}.
+     *
+     * @param blockState  the {@code BlockState} of the block
+     * @param level  the level in which the block exists
+     * @param position  the position of the block
+     * @param player  the player who used the tool on this block
+     * @param tool  the {@code ItemStack} of the tool that was used on this block
+     * @param toolAction  the {@code ToolAction} that was performed on this block
+     * @return the new {@code BlockState} if the {@code ToolAction} was successful, null otherwise
+     */
     @Override
     public BlockState getToolModifiedState(BlockState blockState, Level level, BlockPos position,
             Player player, ItemStack tool, ToolAction toolAction) {
@@ -114,6 +170,13 @@ public class BoomLog extends RotatedPillarBlock {
         }
     }
 
+    /**
+     * Triggers the {@code BoomLog} to explode, stripping off the bark.
+     *
+     * @param blockState  the {@code BlockState} of the block to explode
+     * @param level  the level in which the block exists
+     * @param position  the position of the block
+     */
     public void explode(BlockState blockState, Level level, BlockPos position) {
         Vec3 center = Vec3.atCenterOf(position);
         float radius = 2.0F;
@@ -124,6 +187,15 @@ public class BoomLog extends RotatedPillarBlock {
         level.setBlockAndUpdate(position, strippedState);
     }
 
+    /**
+     * Drops the loot from an entity stripping the bark off of this block.
+     *
+     * @param blockState  the {@code BlockState} of the block that was stripped
+     * @param level  the level in which the block exists
+     * @param position  the position of the block
+     * @param harvester  the entity who stripped the bark
+     * @param tool  the tool used to strip the bark
+     */
     public void dropStripResources(BlockState blockState, Level level, BlockPos position,
             @Nullable Entity harvester, ItemStack tool) {
 
@@ -134,6 +206,16 @@ public class BoomLog extends RotatedPillarBlock {
         drops.forEach(drop -> popResourceFromFace(level, position, direction, drop));
     }
 
+    /**
+     * Returns the loot table for the stripping of this block.
+     *
+     * <p>This method first checks for a custom loot table that matches the resource ID of this
+     * block in gameplay/boomtrees/strip/. If none exists, this method instead returns the default
+     * loot table {@link #DEFAULT_STRIP_LOOT_TABLE}.
+     *
+     * @param server  the running Minecraft server
+     * @return the stripping loot table
+     */
     public LootTable getStripLootTable(MinecraftServer server) {
         String namespace = getRegistryName().getNamespace();
         String path = getRegistryName().getPath();
@@ -148,6 +230,16 @@ public class BoomLog extends RotatedPillarBlock {
         }
     }
 
+    /**
+     * Generates and returns drops for the stripping of this block.
+     *
+     * @param blockState  the {@code BlockState} of the block that was stripped
+     * @param level  the level in which the block exists
+     * @param position  the position of the block
+     * @param harvester  the entity who stripped the bark
+     * @param tool  the tool used to strip the bark
+     * @return drops for the stripping of this block
+     */
     public List<ItemStack> getStripDrops(BlockState blockState, Level level, BlockPos position,
             @Nullable Entity harvester, ItemStack tool) {
 
@@ -165,9 +257,13 @@ public class BoomLog extends RotatedPillarBlock {
         return drops;
     }
 
-    public BlockState strip(BlockState state) {
+    /**
+     * {@return the new {@code BlockState} after a block with state {@code blockState} is stripped}
+     * @param blockState  the state of the block to be stripped
+     */
+    public BlockState strip(BlockState blockState) {
         return Blocks.STRIPPED_OAK_LOG.defaultBlockState()
-                .setValue(RotatedPillarBlock.AXIS, state.getValue(RotatedPillarBlock.AXIS));
+                .setValue(RotatedPillarBlock.AXIS, blockState.getValue(RotatedPillarBlock.AXIS));
     }
 
 }

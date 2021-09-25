@@ -35,6 +35,10 @@ public final class ItemList {
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BoomTrees.MOD_ID);
     public static final RegistryObject<Item> OAK_BOOMLOG_ITEM = ITEMS.register("oak_boomlog", () -> new BlockItem(BlockList.OAK_BOOMLOG.get(), (new Item.Properties()).tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
 
+    /**
+     * Called when the mod is being created. This method registers all items listed in this class.
+     * @param event  the event provided by the mod event bus
+     */
     @SubscribeEvent
     public static void onConstructModEvent(FMLConstructModEvent event) {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();

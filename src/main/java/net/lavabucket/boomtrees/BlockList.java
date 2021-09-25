@@ -35,6 +35,10 @@ public final class BlockList {
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, BoomTrees.MOD_ID);
     public static final RegistryObject<Block> OAK_BOOMLOG = BLOCKS.register("oak_boomlog", () -> new BoomLog(BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
 
+    /**
+     * Called when the mod is being created. This method registers all blocks listed in this class.
+     * @param event  the event provided by the mod event bus
+     */
     @SubscribeEvent
     public static void onConstructModEvent(FMLConstructModEvent event) {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
