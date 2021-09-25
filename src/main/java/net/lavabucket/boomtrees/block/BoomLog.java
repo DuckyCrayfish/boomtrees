@@ -57,45 +57,54 @@ public class BoomLog extends RotatedPillarBlock {
     }
 
     @Override
-    public void onProjectileHit(Level level, BlockState state, BlockHitResult hitResult, Projectile projectile) {
+    public void onProjectileHit(Level level, BlockState blockState, BlockHitResult hitResult,
+            Projectile projectile) {
+
         if (!level.isClientSide()) {
             BlockPos position = hitResult.getBlockPos();
-            explode(state, level, position);
+            explode(blockState, level, position);
         }
     }
 
     @Override
-    public void catchFire(BlockState state, Level level, BlockPos position, Direction face, LivingEntity igniter) {
-        explode(state, level, position);
-        super.catchFire(state, level, position, face, igniter);
+    public void catchFire(BlockState blockState, Level level, BlockPos position, Direction face,
+            LivingEntity igniter) {
+        explode(blockState, level, position);
+        super.catchFire(blockState, level, position, face, igniter);
     }
 
     @Override
-    public void attack(BlockState state, Level level, BlockPos position, Player player) {
-        explode(state, level, position);
+    public void attack(BlockState blockState, Level level, BlockPos position, Player player) {
+        explode(blockState, level, position);
     }
 
     @Override
-    public BlockState getToolModifiedState(BlockState blockState, Level world, BlockPos position,
+    public BlockState getToolModifiedState(BlockState blockState, Level level, BlockPos position,
             Player player, ItemStack tool, ToolAction toolAction) {
 
         if (tool.canPerformAction(toolAction) && ToolActions.AXE_STRIP.equals(toolAction)) {
-            if (!world.isClientSide()) {
-                dropStripResources(blockState, world, position, player, tool);
+            if (!level.isClientSide()) {
+                dropStripResources(blockState, level, position, player, tool);
             }
-            return getStrippedState(blockState);
+            return strip(blockState);
         } else {
-            return super.getToolModifiedState(blockState, world, position, player, tool, toolAction);
+            return super.getToolModifiedState(blockState, level, position, player, tool, toolAction);
         }
     }
 
-    public void explode(BlockState state, Level level, BlockPos position) {
-        level.explode(null, position.getX() + 0.5D, position.getY() + 0.5D, position.getZ() + 0.5D, 2.0F, Explosion.BlockInteraction.NONE);
-        BlockState strippedState = getStrippedState(state);
+    public void explode(BlockState blockState, Level level, BlockPos position) {
+        Vec3 center = Vec3.atCenterOf(position);
+        float radius = 2.0F;
+        Explosion.BlockInteraction interaction = Explosion.BlockInteraction.NONE;
+        BlockState strippedState = strip(blockState);
+
+        level.explode(null, center.x, center.y, center.z, radius, interaction);
         level.setBlockAndUpdate(position, strippedState);
     }
 
-    public void dropStripResources(BlockState blockState, Level level, BlockPos position, @Nullable Entity harvester, ItemStack tool) {
+    public void dropStripResources(BlockState blockState, Level level, BlockPos position,
+            @Nullable Entity harvester, ItemStack tool) {
+
         List<ItemStack> drops = getStripDrops(blockState, level, position, harvester, tool);
         Vec3 vectorToPlayer = Vec3.atCenterOf(position).vectorTo(harvester.position());
         Direction direction = Direction.getNearest(vectorToPlayer.x, vectorToPlayer.y, vectorToPlayer.z);
@@ -107,27 +116,29 @@ public class BoomLog extends RotatedPillarBlock {
         return STRIP_LOOT_TABLE;
     }
 
-    public List<ItemStack> getStripDrops(BlockState blockState, Level level, BlockPos position, @Nullable Entity harvester, ItemStack tool) {
-        ResourceLocation resourcelocation = getLootTable();
-        if (resourcelocation == BuiltInLootTables.EMPTY) {
+    public List<ItemStack> getStripDrops(BlockState blockState, Level level, BlockPos position,
+            @Nullable Entity harvester, ItemStack tool) {
+
+        ResourceLocation lootTableLocation = getStripLootTable();
+        if (lootTableLocation == BuiltInLootTables.EMPTY) {
             return Collections.emptyList();
-        } else {
-            LootTable lootTable = level.getServer().getLootTables().get(getStripLootTable());
-
-            LootContext.Builder lootBuilder = (new LootContext.Builder((ServerLevel) level))
-                    .withRandom(level.random)
-                    .withParameter(LootContextParams.BLOCK_STATE, blockState)
-                    .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(position))
-                    .withParameter(LootContextParams.TOOL, tool)
-                    .withOptionalParameter(LootContextParams.THIS_ENTITY, harvester);
-
-            LootContext lootContext = lootBuilder.create(LootContextParamSets.BLOCK);
-            List<ItemStack> drops = lootTable.getRandomItems(lootContext);
-            return drops;
         }
+
+        LootTable lootTable = level.getServer().getLootTables().get(lootTableLocation);
+
+        LootContext.Builder lootBuilder = (new LootContext.Builder((ServerLevel) level))
+                .withRandom(level.random)
+                .withParameter(LootContextParams.BLOCK_STATE, blockState)
+                .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(position))
+                .withParameter(LootContextParams.TOOL, tool)
+                .withOptionalParameter(LootContextParams.THIS_ENTITY, harvester);
+
+        LootContext lootContext = lootBuilder.create(LootContextParamSets.BLOCK);
+        List<ItemStack> drops = lootTable.getRandomItems(lootContext);
+        return drops;
     }
 
-    public BlockState getStrippedState(BlockState state) {
+    public BlockState strip(BlockState state) {
         return Blocks.STRIPPED_OAK_LOG.defaultBlockState()
                 .setValue(RotatedPillarBlock.AXIS, state.getValue(RotatedPillarBlock.AXIS));
     }
