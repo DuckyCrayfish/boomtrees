@@ -33,7 +33,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public final class BlockList {
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, BoomTrees.MOD_ID);
-    public static final RegistryObject<Block> BOOM_LOG = BLOCKS.register("boom_log", () -> new BoomLog(BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
+    public static final RegistryObject<Block> OAK_BOOMLOG = BLOCKS.register("oak_boomlog", () -> new BoomLog(BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
 
     @SubscribeEvent
     public static void onConstructModEvent(FMLConstructModEvent event) {
