@@ -19,14 +19,15 @@
 
 package net.lavabucket.boomtrees.block;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.lavabucket.boomtrees.BoomTrees;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,7 +40,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -51,7 +51,9 @@ import net.minecraftforge.common.ToolActions;
 
 public class BoomLog extends RotatedPillarBlock {
 
-    public static final ResourceLocation STRIP_LOOT_TABLE = new ResourceLocation("boomtrees", "gameplay/boomlog_strip");
+    public static final ResourceLocation DEFAULT_STRIP_LOOT_TABLE =
+            new ResourceLocation("boomtrees", "gameplay/boomtrees/strip/default");
+
     private final int flammability;
     private final int fireSpreadSpeed;
 
@@ -101,6 +103,7 @@ public class BoomLog extends RotatedPillarBlock {
     public BlockState getToolModifiedState(BlockState blockState, Level level, BlockPos position,
             Player player, ItemStack tool, ToolAction toolAction) {
 
+                this.getLootTable();
         if (tool.canPerformAction(toolAction) && ToolActions.AXE_STRIP.equals(toolAction)) {
             if (!level.isClientSide()) {
                 dropStripResources(blockState, level, position, player, tool);
@@ -131,19 +134,24 @@ public class BoomLog extends RotatedPillarBlock {
         drops.forEach(drop -> popResourceFromFace(level, position, direction, drop));
     }
 
-    public ResourceLocation getStripLootTable() {
-        return STRIP_LOOT_TABLE;
+    public LootTable getStripLootTable(MinecraftServer server) {
+        String namespace = getRegistryName().getNamespace();
+        String path = getRegistryName().getPath();
+        ResourceLocation customLocation =
+                new ResourceLocation(namespace, "gameplay/" + BoomTrees.MOD_ID + "/strip/" + path);
+        LootTable customLootTable = server.getLootTables().get(customLocation);
+
+        if (customLootTable.equals(LootTable.EMPTY)) {
+            return server.getLootTables().get(DEFAULT_STRIP_LOOT_TABLE);
+        } else {
+            return customLootTable;
+        }
     }
 
     public List<ItemStack> getStripDrops(BlockState blockState, Level level, BlockPos position,
             @Nullable Entity harvester, ItemStack tool) {
 
-        ResourceLocation lootTableLocation = getStripLootTable();
-        if (lootTableLocation == BuiltInLootTables.EMPTY) {
-            return Collections.emptyList();
-        }
-
-        LootTable lootTable = level.getServer().getLootTables().get(lootTableLocation);
+        LootTable lootTable = getStripLootTable(level.getServer());
 
         LootContext.Builder lootBuilder = (new LootContext.Builder((ServerLevel) level))
                 .withRandom(level.random)
