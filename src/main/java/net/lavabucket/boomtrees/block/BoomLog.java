@@ -37,6 +37,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -125,6 +126,27 @@ public class BoomLog extends RotatedPillarBlock {
             LivingEntity igniter) {
         explode(blockState, level, position);
         super.catchFire(blockState, level, position, face, igniter);
+    }
+
+    /**
+     * This method is called when a neighboring block changes.
+     * <p>This method triggers an explosion if it detects an explosion in the neighboring block.
+     *
+     * @param blockState  the {@code BlockState} of the block whose neighbor changed
+     * @param level  the level in which the change happened
+     * @param position  the position of the block whose neighbor changed
+     * @param changedBlock  the old {@code Block} that changed
+     * @param changedPosition  the position of the block that changed
+     * @param unknown who knows?
+     */
+    @Override
+    public void neighborChanged(BlockState blockState, Level level, BlockPos position,
+            Block changedBlock, BlockPos changedPosition, boolean unknown) {
+
+        Block changedBlockNew = level.getBlockState(changedPosition).getBlock();
+        if (changedBlock instanceof BoomLog && changedBlockNew.equals(Blocks.STRIPPED_OAK_LOG)) {
+            ((BoomLog) blockState.getBlock()).explode(blockState, level, position);
+        }
     }
 
     /**
