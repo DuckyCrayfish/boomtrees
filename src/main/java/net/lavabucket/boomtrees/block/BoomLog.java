@@ -19,8 +19,16 @@
 
 package net.lavabucket.boomtrees.block;
 
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -30,11 +38,19 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 
 public class BoomLog extends RotatedPillarBlock {
+
+    public static final ResourceLocation STRIP_LOOT_TABLE = new ResourceLocation("boomtrees", "gameplay/boomlog_strip");
 
     public BoomLog(Properties properties) {
         super(properties);
@@ -60,13 +76,16 @@ public class BoomLog extends RotatedPillarBlock {
     }
 
     @Override
-    public BlockState getToolModifiedState(BlockState state, Level world, BlockPos position,
-            Player player, ItemStack stack, ToolAction toolAction) {
+    public BlockState getToolModifiedState(BlockState blockState, Level world, BlockPos position,
+            Player player, ItemStack tool, ToolAction toolAction) {
 
-        if (stack.canPerformAction(toolAction) && ToolActions.AXE_STRIP.equals(toolAction)) {
-            return getStrippedState(state);
+        if (tool.canPerformAction(toolAction) && ToolActions.AXE_STRIP.equals(toolAction)) {
+            if (!world.isClientSide()) {
+                dropStripResources(blockState, world, position, player, tool);
+            }
+            return getStrippedState(blockState);
         } else {
-            return super.getToolModifiedState(state, world, position, player, stack, toolAction);
+            return super.getToolModifiedState(blockState, world, position, player, tool, toolAction);
         }
     }
 
@@ -74,6 +93,38 @@ public class BoomLog extends RotatedPillarBlock {
         level.explode(null, position.getX() + 0.5D, position.getY() + 0.5D, position.getZ() + 0.5D, 2.0F, Explosion.BlockInteraction.NONE);
         BlockState strippedState = getStrippedState(state);
         level.setBlockAndUpdate(position, strippedState);
+    }
+
+    public void dropStripResources(BlockState blockState, Level level, BlockPos position, @Nullable Entity harvester, ItemStack tool) {
+        List<ItemStack> drops = getStripDrops(blockState, level, position, harvester, tool);
+        Vec3 vectorToPlayer = Vec3.atCenterOf(position).vectorTo(harvester.position());
+        Direction direction = Direction.getNearest(vectorToPlayer.x, vectorToPlayer.y, vectorToPlayer.z);
+
+        drops.forEach(drop -> popResourceFromFace(level, position, direction, drop));
+    }
+
+    public ResourceLocation getStripLootTable() {
+        return STRIP_LOOT_TABLE;
+    }
+
+    public List<ItemStack> getStripDrops(BlockState blockState, Level level, BlockPos position, @Nullable Entity harvester, ItemStack tool) {
+        ResourceLocation resourcelocation = getLootTable();
+        if (resourcelocation == BuiltInLootTables.EMPTY) {
+            return Collections.emptyList();
+        } else {
+            LootTable lootTable = level.getServer().getLootTables().get(getStripLootTable());
+
+            LootContext.Builder lootBuilder = (new LootContext.Builder((ServerLevel) level))
+                    .withRandom(level.random)
+                    .withParameter(LootContextParams.BLOCK_STATE, blockState)
+                    .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(position))
+                    .withParameter(LootContextParams.TOOL, tool)
+                    .withOptionalParameter(LootContextParams.THIS_ENTITY, harvester);
+
+            LootContext lootContext = lootBuilder.create(LootContextParamSets.BLOCK);
+            List<ItemStack> drops = lootTable.getRandomItems(lootContext);
+            return drops;
+        }
     }
 
     public BlockState getStrippedState(BlockState state) {
