@@ -125,7 +125,6 @@ public class BoomLog extends RotatedPillarBlock {
     public void catchFire(BlockState blockState, Level level, BlockPos position, Direction face,
             LivingEntity igniter) {
         explode(blockState, level, position);
-        super.catchFire(blockState, level, position, face, igniter);
     }
 
     /**
