@@ -129,27 +129,6 @@ public class BoomLog extends RotatedPillarBlock {
     }
 
     /**
-     * This method is called when a neighboring block changes.
-     * <p>This method triggers an explosion if it detects an explosion in the neighboring block.
-     *
-     * @param blockState  the {@code BlockState} of the block whose neighbor changed
-     * @param level  the level in which the change happened
-     * @param position  the position of the block whose neighbor changed
-     * @param changedBlock  the old {@code Block} that changed
-     * @param changedPosition  the position of the block that changed
-     * @param unknown who knows?
-     */
-    @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos position,
-            Block changedBlock, BlockPos changedPosition, boolean unknown) {
-
-        Block changedBlockNew = level.getBlockState(changedPosition).getBlock();
-        if (changedBlock instanceof BoomLog && changedBlockNew.equals(Blocks.STRIPPED_OAK_LOG)) {
-            ((BoomLog) blockState.getBlock()).explode(blockState, level, position);
-        }
-    }
-
-    /**
      * This method is called when this block is attacked by a player.
      * <p>This method triggers a bark explosion.
      *
@@ -203,10 +182,30 @@ public class BoomLog extends RotatedPillarBlock {
         Vec3 center = Vec3.atCenterOf(position);
         float radius = 2.0F;
         Explosion.BlockInteraction interaction = Explosion.BlockInteraction.NONE;
-        BlockState strippedState = strip(blockState);
 
         level.explode(null, center.x, center.y, center.z, radius, interaction);
+
+        BlockState strippedState = strip(blockState);
         level.setBlockAndUpdate(position, strippedState);
+
+        triggerNeighbors(level, position);
+    }
+
+    public void triggerNeighbors(Level level, BlockPos position) {
+        triggerNeighbor(level, position.west());
+        triggerNeighbor(level, position.east());
+        triggerNeighbor(level, position.below());
+        triggerNeighbor(level, position.above());
+        triggerNeighbor(level, position.north());
+        triggerNeighbor(level, position.south());
+    }
+
+    public void triggerNeighbor(Level level, BlockPos position) {
+        Block block = level.getBlockState(position).getBlock();
+        if (block instanceof BoomLog) {
+            BoomLog log = (BoomLog) block;
+            log.explode(level.getBlockState(position), level, position);
+        }
     }
 
     /**
