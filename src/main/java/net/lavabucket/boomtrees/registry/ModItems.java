@@ -32,12 +32,12 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 /** This class contains all items registered by BoomTrees. */
-public final class BTItems {
+public final class ModItems {
 
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BoomTrees.MOD_ID);
 
-    public static final RegistryObject<Item> OAK_BOOMLOG_ITEM = ITEMS.register("oak_boomlog", () -> new BlockItem(BTBlocks.OAK_BOOMLOG.get(), (new Item.Properties()).tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
-    public static final RegistryObject<Item> STRIPPED_OAK_BOOMLOG = ITEMS.register("stripped_oak_boomlog", () -> new BlockItem(BTBlocks.STRIPPED_OAK_BOOMLOG.get(), (new Item.Properties()).tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> OAK_BOOMLOG_ITEM = ITEMS.register("oak_boomlog", () -> new BlockItem(ModBlocks.OAK_BOOMLOG.get(), (new Item.Properties()).tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> STRIPPED_OAK_BOOMLOG = ITEMS.register("stripped_oak_boomlog", () -> new BlockItem(ModBlocks.STRIPPED_OAK_BOOMLOG.get(), (new Item.Properties()).tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
 
     /**
      * Called by Forge when the mod is being constructed. Registers all items listed in this class.
