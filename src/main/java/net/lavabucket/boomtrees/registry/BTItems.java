@@ -17,8 +17,9 @@
  * along with BoomTrees.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.lavabucket.boomtrees;
+package net.lavabucket.boomtrees.registry;
 
+import net.lavabucket.boomtrees.BoomTrees;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -30,10 +31,10 @@ import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public final class ItemList {
+public final class BTItems {
 
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BoomTrees.MOD_ID);
-    public static final RegistryObject<Item> OAK_BOOMLOG_ITEM = ITEMS.register("oak_boomlog", () -> new BlockItem(BlockList.OAK_BOOMLOG.get(), (new Item.Properties()).tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> OAK_BOOMLOG_ITEM = ITEMS.register("oak_boomlog", () -> new BlockItem(BTBlocks.OAK_BOOMLOG.get(), (new Item.Properties()).tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
 
     /**
      * Called when the mod is being created. This method registers all items listed in this class.

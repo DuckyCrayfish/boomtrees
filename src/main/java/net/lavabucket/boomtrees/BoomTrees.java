@@ -19,6 +19,9 @@
 
 package net.lavabucket.boomtrees;
 
+import net.lavabucket.boomtrees.registry.BTBlocks;
+import net.lavabucket.boomtrees.registry.BTConfiguredFeatures;
+import net.lavabucket.boomtrees.registry.BTItems;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -38,9 +41,9 @@ public class BoomTrees {
     public BoomTrees() {
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        modBus.register(BlockList.class);
-        modBus.register(ConfiguredFeatureList.class);
-        modBus.register(ItemList.class);
+        modBus.register(BTBlocks.class);
+        modBus.register(BTConfiguredFeatures.class);
+        modBus.register(BTItems.class);
     }
 
 }

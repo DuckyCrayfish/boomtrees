@@ -17,8 +17,9 @@
  * along with BoomTrees.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.lavabucket.boomtrees;
+package net.lavabucket.boomtrees.registry;
 
+import net.lavabucket.boomtrees.BoomTrees;
 import net.lavabucket.boomtrees.block.BoomLog;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -31,7 +32,7 @@ import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public final class BlockList {
+public final class BTBlocks {
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, BoomTrees.MOD_ID);
     public static final RegistryObject<Block> OAK_BOOMLOG = BLOCKS.register("oak_boomlog", () -> new BoomLog(BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
 
