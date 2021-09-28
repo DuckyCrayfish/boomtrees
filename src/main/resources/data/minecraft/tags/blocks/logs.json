@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "boomtrees:oak_boomlog"
+    "boomtrees:oak_boomlog",
+    "boomtrees:stripped_oak_boomlog"
   ]
 }

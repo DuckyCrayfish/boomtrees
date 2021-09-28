@@ -20,6 +20,7 @@
 package net.lavabucket.boomtrees.block;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
@@ -38,7 +39,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -56,26 +56,31 @@ public class BoomLog extends RotatedPillarBlock {
     public static final ResourceLocation DEFAULT_STRIP_LOOT_TABLE =
             new ResourceLocation("boomtrees", "gameplay/boomtrees/strip/default");
 
+    private final Supplier<Block> stripped;
     private final int flammability;
     private final int fireSpreadSpeed;
 
     /**
      * Instantiates a new block object.
+     *
+     * @param stripped  the stripped version of this block
      * @param properties  the properties of the new block
      */
-    public BoomLog(Properties properties) {
-        this(400, 5, properties);
+    public BoomLog(Supplier<Block> stripped, Properties properties) {
+        this(stripped, 400, 5, properties);
     }
 
     /**
      * Instantiates a new block object.
      *
+     * @param stripped  the stripped version of this block
      * @param flammability  the flammability of the new block
      * @param fireSpreadSpeed  the speed at which fire spreads from the new block
      * @param properties  the properties of the new block
      */
-    public BoomLog(int flammability, int fireSpreadSpeed, Properties properties) {
+    public BoomLog(Supplier<Block> stripped, int flammability, int fireSpreadSpeed, Properties properties) {
         super(properties);
+        this.stripped = stripped;
         this.flammability = flammability;
         this.fireSpreadSpeed = fireSpreadSpeed;
     }
@@ -282,7 +287,7 @@ public class BoomLog extends RotatedPillarBlock {
      * @param blockState  the state of the block to be stripped
      */
     public BlockState strip(BlockState blockState) {
-        return Blocks.STRIPPED_OAK_LOG.defaultBlockState()
+        return stripped.get().defaultBlockState()
                 .setValue(RotatedPillarBlock.AXIS, blockState.getValue(RotatedPillarBlock.AXIS));
     }
 
