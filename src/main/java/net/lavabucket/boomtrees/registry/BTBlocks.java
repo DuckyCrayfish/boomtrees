@@ -20,8 +20,8 @@
 package net.lavabucket.boomtrees.registry;
 
 import net.lavabucket.boomtrees.BoomTrees;
-import net.lavabucket.boomtrees.block.BoomLog;
-import net.lavabucket.boomtrees.block.StrippedBoomLog;
+import net.lavabucket.boomtrees.block.BoomLogBlock;
+import net.lavabucket.boomtrees.block.StrippedBoomLogBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -37,8 +37,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 public final class BTBlocks {
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, BoomTrees.MOD_ID);
 
-    public static final RegistryObject<Block> OAK_BOOMLOG = BLOCKS.register("oak_boomlog", () -> new BoomLog(() -> BTBlocks.STRIPPED_OAK_BOOMLOG.get(), BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
-    public static final RegistryObject<Block> STRIPPED_OAK_BOOMLOG = BLOCKS.register("stripped_oak_boomlog", () -> new StrippedBoomLog(() -> BTBlocks.OAK_BOOMLOG.get(), BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
+    public static final RegistryObject<Block> OAK_BOOMLOG = BLOCKS.register("oak_boomlog", () -> new BoomLogBlock(() -> BTBlocks.STRIPPED_OAK_BOOMLOG.get(), BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
+    public static final RegistryObject<Block> STRIPPED_OAK_BOOMLOG = BLOCKS.register("stripped_oak_boomlog", () -> new StrippedBoomLogBlock(() -> BTBlocks.OAK_BOOMLOG.get(), BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
 
     /**
      * Called by Forge when the mod is being constructed. Registers all blocks listed in this class.

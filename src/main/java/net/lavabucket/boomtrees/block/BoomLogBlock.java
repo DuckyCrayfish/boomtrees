@@ -51,7 +51,7 @@ import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 
 /** A BoomLog block. Strips into a {@code StrippedBoomLog}. */
-public class BoomLog extends RotatedPillarBlock {
+public class BoomLogBlock extends RotatedPillarBlock {
 
     /** The default loot table used for log stripping when no custom loot table is provided. */
     public static final ResourceLocation DEFAULT_STRIP_LOOT_TABLE =
@@ -67,7 +67,7 @@ public class BoomLog extends RotatedPillarBlock {
      * @param stripped  the stripped version of this block
      * @param properties  the properties of the new block
      */
-    public BoomLog(Supplier<Block> stripped, Properties properties) {
+    public BoomLogBlock(Supplier<Block> stripped, Properties properties) {
         this(stripped, 400, 5, properties);
     }
 
@@ -79,7 +79,7 @@ public class BoomLog extends RotatedPillarBlock {
      * @param fireSpreadSpeed  the speed at which fire spreads from the new block
      * @param properties  the properties of the new block
      */
-    public BoomLog(Supplier<Block> stripped, int flammability, int fireSpreadSpeed, Properties properties) {
+    public BoomLogBlock(Supplier<Block> stripped, int flammability, int fireSpreadSpeed, Properties properties) {
         super(properties);
         this.stripped = stripped;
         this.flammability = flammability;
@@ -207,8 +207,8 @@ public class BoomLog extends RotatedPillarBlock {
 
     public void triggerNeighbor(Level level, BlockPos position) {
         Block block = level.getBlockState(position).getBlock();
-        if (block instanceof BoomLog) {
-            BoomLog log = (BoomLog) block;
+        if (block instanceof BoomLogBlock) {
+            BoomLogBlock log = (BoomLogBlock) block;
             log.explode(level.getBlockState(position), level, position);
         }
     }

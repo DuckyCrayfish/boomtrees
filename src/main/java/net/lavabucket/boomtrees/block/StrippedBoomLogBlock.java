@@ -31,7 +31,7 @@ import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 /** A stripped {@code BoomLog}. Regrows back into a BoomLog. */
-public class StrippedBoomLog extends RotatedPillarBlock {
+public class StrippedBoomLogBlock extends RotatedPillarBlock {
 
     private final int flammability;
     private final int fireSpreadSpeed;
@@ -43,7 +43,7 @@ public class StrippedBoomLog extends RotatedPillarBlock {
      * @param unstripped  the unstripped version of this block
      * @param properties  the properties of the new block
      */
-    public StrippedBoomLog(Supplier<Block> unstripped, Properties properties) {
+    public StrippedBoomLogBlock(Supplier<Block> unstripped, Properties properties) {
         this(unstripped, 400, 5, properties);
     }
 
@@ -55,7 +55,7 @@ public class StrippedBoomLog extends RotatedPillarBlock {
      * @param fireSpreadSpeed  the speed at which fire spreads from the new block
      * @param properties  the properties of the new block
      */
-    public StrippedBoomLog(Supplier<Block> unstripped, int flammability, int fireSpreadSpeed, Properties properties) {
+    public StrippedBoomLogBlock(Supplier<Block> unstripped, int flammability, int fireSpreadSpeed, Properties properties) {
         super(properties);
         this.unstripped = unstripped;
         this.flammability = flammability;
