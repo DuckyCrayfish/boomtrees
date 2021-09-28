@@ -50,6 +50,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 
+/** A BoomLog block. Strips into a {@code StrippedBoomLog}. */
 public class BoomLog extends RotatedPillarBlock {
 
     /** The default loot table used for log stripping when no custom loot table is provided. */

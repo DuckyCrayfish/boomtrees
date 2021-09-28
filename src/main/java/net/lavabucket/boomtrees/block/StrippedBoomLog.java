@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
+/** A stripped {@code BoomLog}. Regrows back into a BoomLog. */
 public class StrippedBoomLog extends RotatedPillarBlock {
 
     private final int flammability;

@@ -31,6 +31,7 @@ import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+/** This class contains all items registered by BoomTrees. */
 public final class BTItems {
 
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BoomTrees.MOD_ID);
@@ -39,7 +40,7 @@ public final class BTItems {
     public static final RegistryObject<Item> STRIPPED_OAK_BOOMLOG = ITEMS.register("stripped_oak_boomlog", () -> new BlockItem(BTBlocks.STRIPPED_OAK_BOOMLOG.get(), (new Item.Properties()).tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
 
     /**
-     * Called when the mod is being created. This method registers all items listed in this class.
+     * Called by Forge when the mod is being constructed. Registers all items listed in this class.
      * @param event  the event provided by the mod event bus
      */
     @SubscribeEvent

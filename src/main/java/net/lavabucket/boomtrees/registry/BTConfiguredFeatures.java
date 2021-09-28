@@ -39,6 +39,7 @@ import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlac
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
+/** This class contains all features registered by BoomTrees. */
 public class BTConfiguredFeatures {
     private static final Map<String, ConfiguredFeature<?, ?>> CONFIGURED_FEATURES = new HashMap<>();
 
@@ -49,6 +50,10 @@ public class BTConfiguredFeatures {
 
     public static ConfiguredFeature<TreeConfiguration, ?> OAK_BOOMTREE = register("oak_boomtree", Feature.TREE.configured((new TreeConfiguration.TreeConfigurationBuilder(new SimpleStateProvider(BTBlocks.OAK_BOOMLOG.get().defaultBlockState()), new StraightTrunkPlacer(4, 2, 0), new SimpleStateProvider(Blocks.OAK_LEAVES.defaultBlockState()), new SimpleStateProvider(Blocks.OAK_SAPLING.defaultBlockState()), new BlobFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0), 3), new TwoLayersFeatureSize(1, 0, 1))).ignoreVines().build()));
 
+    /**
+     * Called by Forge during mod setup. Registers all features listed in this class.
+     * @param event  the event provided by the mod event bus
+     */
     @SubscribeEvent
     public static void onCommonSetupEvent(FMLCommonSetupEvent event) {
         CONFIGURED_FEATURES.forEach((key, configuredFeature) -> {
