@@ -26,6 +26,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -91,6 +92,13 @@ public class StrippedBoomLogBlock extends RotatedPillarBlock {
      */
     @Override
     public void randomTick(BlockState blockState, ServerLevel level, BlockPos position, Random random) {
+        for (Direction direction : Direction.values()) {
+            BlockPos adjacent = position.relative(direction);
+            if (level.getBlockState(adjacent).getBlock() instanceof BaseFireBlock) {
+                return;
+            }
+        }
+
         level.setBlockAndUpdate(position, unstrip(blockState));
     }
 
