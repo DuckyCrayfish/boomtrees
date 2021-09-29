@@ -44,7 +44,7 @@ public class StrippedBoomLogBlock extends RotatedPillarBlock {
      * @param properties  the properties of the new block
      */
     public StrippedBoomLogBlock(Supplier<Block> unstripped, Properties properties) {
-        this(unstripped, 400, 5, properties);
+        this(unstripped, 5, 5, properties);
     }
 
     /**
