@@ -165,7 +165,6 @@ public class BoomLogBlock extends RotatedPillarBlock {
     public BlockState getToolModifiedState(BlockState blockState, Level level, BlockPos position,
             Player player, ItemStack tool, ToolAction toolAction) {
 
-                this.getLootTable();
         if (tool.canPerformAction(toolAction) && ToolActions.AXE_STRIP.equals(toolAction)) {
             if (!level.isClientSide()) {
                 dropStripResources(blockState, level, position, player, tool);
