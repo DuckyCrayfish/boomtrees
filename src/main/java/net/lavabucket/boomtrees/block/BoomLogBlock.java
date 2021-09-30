@@ -38,6 +38,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -118,8 +119,10 @@ public class BoomLogBlock extends RotatedPillarBlock {
     }
 
     /**
-     * This method is called when this block is consumed by fire.
-     * <p>This method triggers a bark explosion.
+     * Called when this block is consumed by fire.
+     *
+     * <p>This method triggers a bark explosion and re-ignites the fire that caused this block to
+     * burn.
      *
      * @param level  the level in which the block exists
      * @param blockState  the {@code BlockState} of the block
@@ -130,7 +133,13 @@ public class BoomLogBlock extends RotatedPillarBlock {
     @Override
     public void catchFire(BlockState blockState, Level level, BlockPos position, Direction face,
             LivingEntity igniter) {
-        triggerNeighbors(level, position);
+        explode(blockState, level, position);
+
+         BlockPos firePosition = position.relative(face);
+         if (BaseFireBlock.canBePlacedAt(level, firePosition, face)) {
+            BlockState fireState = BaseFireBlock.getState(level, firePosition);
+            level.setBlock(firePosition, fireState, 11);
+         }
     }
 
     /**
