@@ -36,8 +36,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.Explosion.BlockInteraction;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
@@ -58,6 +58,9 @@ public class BoomLogBlock extends RotatedPillarBlock {
     /** The default loot table used for log stripping when no custom loot table is provided. */
     public static final ResourceLocation DEFAULT_STRIP_LOOT_TABLE =
             new ResourceLocation("boomtrees", "gameplay/boomtrees/strip/default");
+
+    private static final float EXPLOSION_RADIUS = 1.5F;
+    private static final BlockInteraction EXPLOSION_INTERACTION = BlockInteraction.NONE;
 
     private final Supplier<Block> stripped;
     private final int flammability;
@@ -237,18 +240,13 @@ public class BoomLogBlock extends RotatedPillarBlock {
      * @param pos  the position of the block to explode
      */
     public void explode(Level level, BlockPos pos) {
-        Vec3 center = Vec3.atCenterOf(pos);
-        float radius = 1.5F;
-        Explosion.BlockInteraction interaction = Explosion.BlockInteraction.NONE;
-
         for (Direction direction : Direction.values()) {
-            Vec3 explosionPos = center.add(
-                    direction.getNormal().getX(),
-                    direction.getNormal().getY(),
-                    direction.getNormal().getZ());
+            // Offset in direction 1 meter from center
+            BlockPos offset = pos.offset(direction.getNormal());
+            Vec3 explosionPos = Vec3.atCenterOf(offset);
 
-            level.explode(null, explosionPos.x, explosionPos.y, explosionPos.z, radius,
-                    interaction);
+            level.explode(null, explosionPos.x, explosionPos.y, explosionPos.z, EXPLOSION_RADIUS,
+                    EXPLOSION_INTERACTION);
         }
     }
 
