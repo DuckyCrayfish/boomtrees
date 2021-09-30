@@ -239,13 +239,12 @@ public class BoomLogBlock extends RotatedPillarBlock {
      * @param level  the level in which to generate the explosion
      * @param pos  the position of the block to explode
      */
-    public void explode(Level level, BlockPos pos) {
+    protected void explode(Level level, BlockPos pos) {
         for (Direction direction : Direction.values()) {
-            // Offset in direction 1 meter from center
-            BlockPos offset = pos.offset(direction.getNormal());
-            Vec3 explosionPos = Vec3.atCenterOf(offset);
+            BlockPos adjacentPos = pos.relative(direction);
+            Vec3 adjacent = Vec3.atCenterOf(adjacentPos);
 
-            level.explode(null, explosionPos.x, explosionPos.y, explosionPos.z, EXPLOSION_RADIUS,
+            level.explode(null, adjacent.x, adjacent.y, adjacent.z, EXPLOSION_RADIUS,
                     EXPLOSION_INTERACTION);
         }
     }
