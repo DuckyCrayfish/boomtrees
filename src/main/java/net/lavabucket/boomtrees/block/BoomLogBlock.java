@@ -114,7 +114,7 @@ public class BoomLogBlock extends RotatedPillarBlock {
 
         if (!level.isClientSide()) {
             BlockPos position = hitResult.getBlockPos();
-            explode(blockState, level, position);
+            triggerExplosion(blockState, level, position);
         }
     }
 
@@ -133,7 +133,7 @@ public class BoomLogBlock extends RotatedPillarBlock {
     @Override
     public void catchFire(BlockState blockState, Level level, BlockPos position, Direction face,
             LivingEntity igniter) {
-        explode(blockState, level, position);
+        triggerExplosion(blockState, level, position);
 
          BlockPos firePosition = position.relative(face);
          if (BaseFireBlock.canBePlacedAt(level, firePosition, face)) {
@@ -153,7 +153,7 @@ public class BoomLogBlock extends RotatedPillarBlock {
      */
     @Override
     public void attack(BlockState blockState, Level level, BlockPos position, Player player) {
-        explode(blockState, level, position);
+        triggerExplosion(blockState, level, position);
     }
 
     /**
@@ -185,21 +185,16 @@ public class BoomLogBlock extends RotatedPillarBlock {
     }
 
     /**
-     * Triggers a BoomLog bark explosion at {@code position}.
+     * Triggers a bark explosion at {@code position}.
      * If {@code blockState} is a {@code BoomLogBlock}, it is stripped of its bark.
-     *
-     * <p>This method causes neighboring {@link BoomLogBlock} blocks to explode as well.
+     * This method causes neighboring {@code BoomLogBlock} blocks to explode as well.
      *
      * @param blockState  the {@code BlockState} of the block to explode
      * @param level  the level in which the block exists
      * @param position  the position of the block
      */
-    public void explode(BlockState blockState, Level level, BlockPos position) {
-        Vec3 center = Vec3.atCenterOf(position);
-        float radius = 2.0F;
-        Explosion.BlockInteraction interaction = Explosion.BlockInteraction.NONE;
-
-        level.explode(null, center.x, center.y, center.z, radius, interaction);
+    public void triggerExplosion(BlockState blockState, Level level, BlockPos position) {
+        explode(level, position);
 
         if (blockState.getBlock() instanceof BoomLogBlock) {
             BlockState strippedState = strip(blockState);
@@ -210,7 +205,24 @@ public class BoomLogBlock extends RotatedPillarBlock {
     }
 
     /**
-     * Calls {@link #explode(BlockState, Level, BlockPos)} on all {@link BoomLogBlock BoomLogBlocks}
+     * Generates the explosion used as the bark explosion for blocks of this class.
+     *
+     * @param level  the level in which to generate the explosion
+     * @param position  the position of the block to explode
+     */
+    public void explode(Level level, BlockPos position) {
+        Vec3 center = Vec3.atCenterOf(position);
+        float radius = 1.5F;
+        Explosion.BlockInteraction interaction = Explosion.BlockInteraction.NONE;
+
+        for (Direction direction : Direction.values()) {
+            Vec3 explosionPos = center.add(direction.getNormal().getX(), direction.getNormal().getY(), direction.getNormal().getZ());
+            level.explode(null, explosionPos.x, explosionPos.y, explosionPos.z, radius, interaction);
+        }
+    }
+
+    /**
+     * Calls {@link #triggerExplosion(BlockState, Level, BlockPos)} on all {@link BoomLogBlock BoomLogBlocks}
      * neighboring {@code position}.
      *
      * <p>This may trigger a chain reaction.
@@ -224,7 +236,7 @@ public class BoomLogBlock extends RotatedPillarBlock {
             BlockState neighborState = level.getBlockState(neighborPos);
             if (neighborState.getBlock() instanceof BoomLogBlock) {
                 BoomLogBlock neighborBlock = (BoomLogBlock) neighborState.getBlock();
-                neighborBlock.explode(neighborState, level, neighborPos);
+                neighborBlock.triggerExplosion(neighborState, level, neighborPos);
             }
         }
     }
