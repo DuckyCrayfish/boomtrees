@@ -176,7 +176,10 @@ public class BoomLogBlock extends RotatedPillarBlock {
     }
 
     /**
-     * Triggers the {@code BoomLog} to explode, stripping off the bark.
+     * Triggers a BoomLog bark explosion at {@code position}.
+     * If {@code blockState} is a {@code BoomLogBlock}, it is stripped of its bark.
+     *
+     * <p>This method causes neighboring {@link BoomLogBlock} blocks to explode as well.
      *
      * @param blockState  the {@code BlockState} of the block to explode
      * @param level  the level in which the block exists
@@ -189,8 +192,10 @@ public class BoomLogBlock extends RotatedPillarBlock {
 
         level.explode(null, center.x, center.y, center.z, radius, interaction);
 
-        BlockState strippedState = strip(blockState);
-        level.setBlockAndUpdate(position, strippedState);
+        if (blockState.getBlock() instanceof BoomLogBlock) {
+            BlockState strippedState = strip(blockState);
+            level.setBlockAndUpdate(position, strippedState);
+        }
 
         triggerNeighbors(level, position);
     }
