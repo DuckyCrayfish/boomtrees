@@ -38,7 +38,7 @@ public final class ModBlocks {
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, BoomTrees.MOD_ID);
 
     public static final RegistryObject<Block> OAK_BOOMLOG = BLOCKS.register("oak_boomlog", () -> new BoomLogBlock(() -> ModBlocks.STRIPPED_OAK_BOOMLOG.get(), BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
-    public static final RegistryObject<Block> STRIPPED_OAK_BOOMLOG = BLOCKS.register("stripped_oak_boomlog", () -> new StrippedBoomLogBlock(() -> ModBlocks.OAK_BOOMLOG.get(), BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
+    public static final RegistryObject<Block> STRIPPED_OAK_BOOMLOG = BLOCKS.register("stripped_oak_boomlog", () -> new StrippedBoomLogBlock(() -> ModBlocks.OAK_BOOMLOG.get(), BlockBehaviour.Properties.copy(Blocks.OAK_LOG).randomTicks()));
 
     /**
      * Called by Forge when the mod is being constructed. Registers all blocks listed in this class.

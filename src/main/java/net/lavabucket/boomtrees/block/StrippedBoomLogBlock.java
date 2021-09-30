@@ -78,14 +78,8 @@ public class StrippedBoomLogBlock extends RotatedPillarBlock {
         return fireSpreadSpeed;
     }
 
-    /** {@return true, indicating that this block should receive random ticks} */
-    @Override
-    public boolean isRandomlyTicking(BlockState p_52288_) {
-        return true;
-    }
-
     /**
-     * Called by Minecraft when a block of this type receives a random tick.
+     * Called by Minecraft when a block of this type receives a tick.
      * Regrows the bark on the ticked block.
      *
      * @param blockState  the {@code BlockState} of the block
@@ -94,15 +88,10 @@ public class StrippedBoomLogBlock extends RotatedPillarBlock {
      * @param random  the random number generator for the level
      */
     @Override
-    public void randomTick(BlockState blockState, ServerLevel level, BlockPos pos, Random random) {
-        for (Direction direction : Direction.values()) {
-            BlockPos adjacent = pos.relative(direction);
-            if (level.getBlockState(adjacent).getBlock() instanceof BaseFireBlock) {
-                return;
-            }
+    public void tick(BlockState blockState, ServerLevel level, BlockPos pos, Random random) {
+        if (!hasFireAdjacent(level, pos)) {
+            level.setBlockAndUpdate(pos, unstrip(blockState));
         }
-
-        level.setBlockAndUpdate(pos, unstrip(blockState));
     }
 
     /**
@@ -115,6 +104,16 @@ public class StrippedBoomLogBlock extends RotatedPillarBlock {
     public BlockState unstrip(BlockState blockState) {
         return unstripped.get().defaultBlockState()
                 .setValue(RotatedPillarBlock.AXIS, blockState.getValue(RotatedPillarBlock.AXIS));
+    }
+
+    private boolean hasFireAdjacent(ServerLevel level, BlockPos pos) {
+        for (Direction direction : Direction.values()) {
+            BlockPos adjacent = pos.relative(direction);
+            if (level.getBlockState(adjacent).getBlock() instanceof BaseFireBlock) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
