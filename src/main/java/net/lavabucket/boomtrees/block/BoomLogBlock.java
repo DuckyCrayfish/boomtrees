@@ -41,6 +41,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -154,6 +155,28 @@ public class BoomLogBlock extends RotatedPillarBlock {
     @Override
     public void attack(BlockState blockState, Level level, BlockPos position, Player player) {
         triggerExplosion(blockState, level, position);
+    }
+
+    /**
+     * This method is called when this block is about to be broken by a player who is able to
+     * harvest the block (not in creative game mode).
+     *
+     * <p>This method triggers a bark explosion at {@code position} but does not trigger a chain
+     * reaction.
+     *
+     * @param level  the level in which the block exists
+     * @param player  the player who is harvesting the block
+     * @param position  the position of the block
+     * @param blockState  the {@code BlockState} of the block
+     * @param blockEntity  the {@code BlockEntity} at {@code position}, or null if none exists
+     * @param stack  the {@code ItemStack} in the hand that is being used to harvest the block
+     */
+    @Override
+    public void playerDestroy(Level level, Player player, BlockPos position, BlockState blockState,
+            @Nullable BlockEntity blockEntity, ItemStack stack) {
+
+        explode(level, position);
+        super.playerDestroy(level, player, position, blockState, blockEntity, stack);
     }
 
     /**
