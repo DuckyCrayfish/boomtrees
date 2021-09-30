@@ -37,7 +37,12 @@ public final class ModItems {
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BoomTrees.MOD_ID);
 
     public static final RegistryObject<Item> OAK_BOOMLOG_ITEM = ITEMS.register("oak_boomlog", () -> new BlockItem(ModBlocks.OAK_BOOMLOG.get(), (new Item.Properties()).tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> CRIMSON_BOOMSTEM = ITEMS.register("crimson_boomstem", () -> new BlockItem(ModBlocks.CRIMSON_BOOMSTEM.get(), (new Item.Properties()).tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> WARPED_BOOMSTEM = ITEMS.register("warped_boomstem", () -> new BlockItem(ModBlocks.WARPED_BOOMSTEM.get(), (new Item.Properties()).tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
+
     public static final RegistryObject<Item> STRIPPED_OAK_BOOMLOG = ITEMS.register("stripped_oak_boomlog", () -> new BlockItem(ModBlocks.STRIPPED_OAK_BOOMLOG.get(), (new Item.Properties()).tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> STRIPPED_CRIMSON_BOOMSTEM = ITEMS.register("stripped_crimson_boomstem", () -> new BlockItem(ModBlocks.STRIPPED_CRIMSON_BOOMSTEM.get(), (new Item.Properties()).tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
+    public static final RegistryObject<Item> STRIPPED_WARPED_BOOMSTEM = ITEMS.register("stripped_warped_boomstem", () -> new BlockItem(ModBlocks.STRIPPED_WARPED_BOOMSTEM.get(), (new Item.Properties()).tab(CreativeModeTab.TAB_BUILDING_BLOCKS)));
 
     /**
      * Called by Forge when the mod is being constructed. Registers all items listed in this class.

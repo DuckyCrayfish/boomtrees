@@ -2,6 +2,10 @@
   "replace": false,
   "values": [
     "boomtrees:oak_boomlog",
-    "boomtrees:stripped_oak_boomlog"
+    "boomtrees:crimson_boomstem",
+    "boomtrees:warped_boomstem",
+    "boomtrees:stripped_oak_boomlog",
+    "boomtrees:stripped_crimson_boomstem",
+    "boomtrees:stripped_warped_boomstem"
   ]
 }

@@ -1,4 +1,8 @@
 {
   "block.boomtrees.oak_boomlog": "Oak BoomLog",
-  "block.boomtrees.stripped_oak_boomlog": "Stripped Oak BoomLog"
+  "block.boomtrees.crimson_boomstem": "Crimson Boomstem",
+  "block.boomtrees.warped_boomstem": "Warped Boomstem",
+  "block.boomtrees.stripped_oak_boomlog": "Stripped Oak BoomLog",
+  "block.boomtrees.stripped_crimson_boomstem": "Stripped Crimson Boomstem",
+  "block.boomtrees.stripped_warped_boomstem": "Stripped Warped Boomstem"
 }

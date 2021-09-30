@@ -1,7 +1,7 @@
 {
   "variants": {
     "axis=x": {
-      "model": "boomtrees:block/oak_boomlog_horizontal",
+      "model": "boomtrees:block/oak_boomlog",
       "x": 90,
       "y": 90
     },
@@ -9,7 +9,7 @@
       "model": "boomtrees:block/oak_boomlog"
     },
     "axis=z": {
-      "model": "boomtrees:block/oak_boomlog_horizontal",
+      "model": "boomtrees:block/oak_boomlog",
       "x": 90
     }
   }

@@ -35,10 +35,16 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 /** This class contains all blocks registered by BoomTrees. */
 public final class ModBlocks {
+
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, BoomTrees.MOD_ID);
 
-    public static final RegistryObject<Block> OAK_BOOMLOG = BLOCKS.register("oak_boomlog", () -> new BoomLogBlock(() -> ModBlocks.STRIPPED_OAK_BOOMLOG.get(), BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
-    public static final RegistryObject<Block> STRIPPED_OAK_BOOMLOG = BLOCKS.register("stripped_oak_boomlog", () -> new StrippedBoomLogBlock(() -> ModBlocks.OAK_BOOMLOG.get(), BlockBehaviour.Properties.copy(Blocks.OAK_LOG).randomTicks()));
+    public static final RegistryObject<Block> OAK_BOOMLOG = BLOCKS.register("oak_boomlog", () -> new BoomLogBlock(ModBlocks.STRIPPED_OAK_BOOMLOG, BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
+    public static final RegistryObject<Block> CRIMSON_BOOMSTEM = BLOCKS.register("crimson_boomstem", () -> new BoomLogBlock(ModBlocks.STRIPPED_CRIMSON_BOOMSTEM, 0, 0, BlockBehaviour.Properties.copy(Blocks.CRIMSON_STEM)));
+    public static final RegistryObject<Block> WARPED_BOOMSTEM = BLOCKS.register("warped_boomstem", () -> new BoomLogBlock(ModBlocks.STRIPPED_WARPED_BOOMSTEM, 0, 0, BlockBehaviour.Properties.copy(Blocks.WARPED_STEM)));
+
+    public static final RegistryObject<Block> STRIPPED_OAK_BOOMLOG = BLOCKS.register("stripped_oak_boomlog", () -> new StrippedBoomLogBlock(OAK_BOOMLOG, BlockBehaviour.Properties.copy(Blocks.OAK_LOG).randomTicks().lootFrom(OAK_BOOMLOG)));
+    public static final RegistryObject<Block> STRIPPED_CRIMSON_BOOMSTEM = BLOCKS.register("stripped_crimson_boomstem", () -> new StrippedBoomLogBlock(CRIMSON_BOOMSTEM, 0, 0, BlockBehaviour.Properties.copy(Blocks.CRIMSON_STEM).randomTicks().lootFrom(CRIMSON_BOOMSTEM)));
+    public static final RegistryObject<Block> STRIPPED_WARPED_BOOMSTEM = BLOCKS.register("stripped_warped_boomstem", () -> new StrippedBoomLogBlock(WARPED_BOOMSTEM, 0, 0, BlockBehaviour.Properties.copy(Blocks.WARPED_STEM).randomTicks().lootFrom(WARPED_BOOMSTEM)));
 
     /**
      * Called by Forge when the mod is being constructed. Registers all blocks listed in this class.
