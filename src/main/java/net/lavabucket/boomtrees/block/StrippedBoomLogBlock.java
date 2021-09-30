@@ -36,31 +36,31 @@ public class StrippedBoomLogBlock extends RotatedPillarBlock {
 
     private final int flammability;
     private final int fireSpreadSpeed;
-    protected final Supplier<Block> unstripped;
+    protected final Supplier<Block> regrown;
 
     /**
      * Instantiates a new block object.
      *
-     * @param unstripped  the unstripped version of this block
+     * @param regrown  the regrown version of this block
      * @param properties  the properties of the new block
      */
-    public StrippedBoomLogBlock(Supplier<Block> unstripped, Properties properties) {
-        this(unstripped, 5, 5, properties);
+    public StrippedBoomLogBlock(Supplier<Block> regrown, Properties properties) {
+        this(regrown, 5, 5, properties);
     }
 
     /**
      * Instantiates a new block object.
      *
-     * @param unstripped  the unstripped version of this block
+     * @param regrown  the regrown version of this block
      * @param flammability  the flammability of the new block
      * @param fireSpreadSpeed  the speed at which fire spreads from the new block
      * @param properties  the properties of the new block
      */
-    public StrippedBoomLogBlock(Supplier<Block> unstripped, int flammability, int fireSpreadSpeed,
+    public StrippedBoomLogBlock(Supplier<Block> regrown, int flammability, int fireSpreadSpeed,
             Properties properties) {
 
         super(properties);
-        this.unstripped = unstripped;
+        this.regrown = regrown;
         this.flammability = flammability;
         this.fireSpreadSpeed = fireSpreadSpeed;
     }
@@ -90,19 +90,19 @@ public class StrippedBoomLogBlock extends RotatedPillarBlock {
     @Override
     public void tick(BlockState blockState, ServerLevel level, BlockPos pos, Random random) {
         if (!hasFireAdjacent(level, pos)) {
-            level.setBlockAndUpdate(pos, unstrip(blockState));
+            level.setBlockAndUpdate(pos, regrow(blockState));
         }
     }
 
     /**
-     * Returns the unstripped version of {@code blockState}.
+     * Returns the regrown version of {@code blockState}.
      * Assumes {@code blockState} is an instance of this block.
      *
-     * @param blockState  the {@code BlockState} to convert to an unstripped version
-     * @return  the unstripped version of {@code blockState}
+     * @param blockState  the {@code BlockState} to convert to a regrown version
+     * @return  the regrown version of {@code blockState}
      */
-    public BlockState unstrip(BlockState blockState) {
-        return unstripped.get().defaultBlockState()
+    public BlockState regrow(BlockState blockState) {
+        return regrown.get().defaultBlockState()
                 .setValue(RotatedPillarBlock.AXIS, blockState.getValue(RotatedPillarBlock.AXIS));
     }
 
