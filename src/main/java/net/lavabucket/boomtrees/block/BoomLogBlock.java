@@ -81,7 +81,9 @@ public class BoomLogBlock extends RotatedPillarBlock {
      * @param fireSpreadSpeed  the speed at which fire spreads from the new block
      * @param properties  the properties of the new block
      */
-    public BoomLogBlock(Supplier<Block> stripped, int flammability, int fireSpreadSpeed, Properties properties) {
+    public BoomLogBlock(Supplier<Block> stripped, int flammability, int fireSpreadSpeed,
+            Properties properties) {
+
         super(properties);
         this.stripped = stripped;
         this.flammability = flammability;
@@ -96,7 +98,8 @@ public class BoomLogBlock extends RotatedPillarBlock {
 
     /** {@return the fire spread speed of this block} */
     @Override
-    public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction face) {
+    public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos,
+            Direction face) {
         return fireSpreadSpeed;
     }
 
@@ -239,14 +242,19 @@ public class BoomLogBlock extends RotatedPillarBlock {
         Explosion.BlockInteraction interaction = Explosion.BlockInteraction.NONE;
 
         for (Direction direction : Direction.values()) {
-            Vec3 explosionPos = center.add(direction.getNormal().getX(), direction.getNormal().getY(), direction.getNormal().getZ());
-            level.explode(null, explosionPos.x, explosionPos.y, explosionPos.z, radius, interaction);
+            Vec3 explosionPos = center.add(
+                    direction.getNormal().getX(),
+                    direction.getNormal().getY(),
+                    direction.getNormal().getZ());
+
+            level.explode(null, explosionPos.x, explosionPos.y, explosionPos.z, radius,
+                    interaction);
         }
     }
 
     /**
-     * Calls {@link #triggerExplosion(BlockState, Level, BlockPos)} on all {@link BoomLogBlock BoomLogBlocks}
-     * neighboring {@code pos}.
+     * Calls {@link #triggerExplosion(BlockState, Level, BlockPos)} on all {@code BoomLogBlock}
+     * blocks neighboring {@code pos}.
      *
      * <p>This may trigger a chain reaction.
      *
@@ -278,7 +286,10 @@ public class BoomLogBlock extends RotatedPillarBlock {
 
         List<ItemStack> drops = getStripDrops(blockState, level, pos, harvester, tool);
         Vec3 vectorToPlayer = Vec3.atCenterOf(pos).vectorTo(harvester.position());
-        Direction direction = Direction.getNearest(vectorToPlayer.x, vectorToPlayer.y, vectorToPlayer.z);
+        Direction direction = Direction.getNearest(
+                vectorToPlayer.x,
+                vectorToPlayer.y,
+                vectorToPlayer.z);
 
         drops.forEach(drop -> popResourceFromFace(level, pos, direction, drop));
     }

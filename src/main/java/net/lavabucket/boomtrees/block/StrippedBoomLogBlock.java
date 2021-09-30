@@ -56,7 +56,9 @@ public class StrippedBoomLogBlock extends RotatedPillarBlock {
      * @param fireSpreadSpeed  the speed at which fire spreads from the new block
      * @param properties  the properties of the new block
      */
-    public StrippedBoomLogBlock(Supplier<Block> unstripped, int flammability, int fireSpreadSpeed, Properties properties) {
+    public StrippedBoomLogBlock(Supplier<Block> unstripped, int flammability, int fireSpreadSpeed,
+            Properties properties) {
+
         super(properties);
         this.unstripped = unstripped;
         this.flammability = flammability;
@@ -71,7 +73,8 @@ public class StrippedBoomLogBlock extends RotatedPillarBlock {
 
     /** {@return the fire spread speed of this block} */
     @Override
-    public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction face) {
+    public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos,
+            Direction face) {
         return fireSpreadSpeed;
     }
 
