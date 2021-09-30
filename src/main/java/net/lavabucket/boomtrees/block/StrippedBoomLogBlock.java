@@ -87,19 +87,19 @@ public class StrippedBoomLogBlock extends RotatedPillarBlock {
      *
      * @param blockState  the {@code BlockState} of the block
      * @param level  the level in which the block exists
-     * @param position  the position of the block
+     * @param pos  the position of the block
      * @param random  the random number generator for the level
      */
     @Override
-    public void randomTick(BlockState blockState, ServerLevel level, BlockPos position, Random random) {
+    public void randomTick(BlockState blockState, ServerLevel level, BlockPos pos, Random random) {
         for (Direction direction : Direction.values()) {
-            BlockPos adjacent = position.relative(direction);
+            BlockPos adjacent = pos.relative(direction);
             if (level.getBlockState(adjacent).getBlock() instanceof BaseFireBlock) {
                 return;
             }
         }
 
-        level.setBlockAndUpdate(position, unstrip(blockState));
+        level.setBlockAndUpdate(pos, unstrip(blockState));
     }
 
     /**

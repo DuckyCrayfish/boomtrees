@@ -127,19 +127,19 @@ public class BoomLogBlock extends RotatedPillarBlock {
      *
      * @param level  the level in which the block exists
      * @param blockState  the {@code BlockState} of the block
-     * @param position  the position of the block
+     * @param pos  the position of the block
      * @param face  the face that caught on fire
      * @param igniter  the entity that ignited the block
      */
     @Override
-    public void catchFire(BlockState blockState, Level level, BlockPos position, Direction face,
+    public void catchFire(BlockState blockState, Level level, BlockPos pos, Direction face,
             LivingEntity igniter) {
-        triggerExplosion(blockState, level, position);
+        triggerExplosion(blockState, level, pos);
 
-         BlockPos firePosition = position.relative(face);
-         if (BaseFireBlock.canBePlacedAt(level, firePosition, face)) {
-            BlockState fireState = BaseFireBlock.getState(level, firePosition);
-            level.setBlock(firePosition, fireState, 11);
+         BlockPos firePos = pos.relative(face);
+         if (BaseFireBlock.canBePlacedAt(level, firePos, face)) {
+            BlockState fireState = BaseFireBlock.getState(level, firePos);
+            level.setBlock(firePos, fireState, 11);
          }
     }
 
@@ -149,34 +149,34 @@ public class BoomLogBlock extends RotatedPillarBlock {
      *
      * @param blockState  the {@code BlockState} of the block
      * @param level  the level in which the block exists
-     * @param position  the position of the block
+     * @param pos  the position of the block
      * @param player  the player who attacked the block
      */
     @Override
-    public void attack(BlockState blockState, Level level, BlockPos position, Player player) {
-        triggerExplosion(blockState, level, position);
+    public void attack(BlockState blockState, Level level, BlockPos pos, Player player) {
+        triggerExplosion(blockState, level, pos);
     }
 
     /**
      * This method is called when this block is about to be broken by a player who is able to
      * harvest the block (not in creative game mode).
      *
-     * <p>This method triggers a bark explosion at {@code position} but does not trigger a chain
+     * <p>This method triggers a bark explosion at {@code pos} but does not trigger a chain
      * reaction.
      *
      * @param level  the level in which the block exists
      * @param player  the player who is harvesting the block
-     * @param position  the position of the block
+     * @param pos  the position of the block
      * @param blockState  the {@code BlockState} of the block
-     * @param blockEntity  the {@code BlockEntity} at {@code position}, or null if none exists
+     * @param blockEntity  the {@code BlockEntity} at {@code pos}, or null if none exists
      * @param stack  the {@code ItemStack} in the hand that is being used to harvest the block
      */
     @Override
-    public void playerDestroy(Level level, Player player, BlockPos position, BlockState blockState,
+    public void playerDestroy(Level level, Player player, BlockPos pos, BlockState blockState,
             @Nullable BlockEntity blockEntity, ItemStack stack) {
 
-        explode(level, position);
-        super.playerDestroy(level, player, position, blockState, blockEntity, stack);
+        explode(level, pos);
+        super.playerDestroy(level, player, pos, blockState, blockEntity, stack);
     }
 
     /**
@@ -187,54 +187,54 @@ public class BoomLogBlock extends RotatedPillarBlock {
      *
      * @param blockState  the {@code BlockState} of the block
      * @param level  the level in which the block exists
-     * @param position  the position of the block
+     * @param pos  the position of the block
      * @param player  the player who used the tool on this block
      * @param tool  the {@code ItemStack} of the tool that was used on this block
      * @param toolAction  the {@code ToolAction} that was performed on this block
      * @return the new {@code BlockState} if the {@code ToolAction} was successful, null otherwise
      */
     @Override
-    public BlockState getToolModifiedState(BlockState blockState, Level level, BlockPos position,
+    public BlockState getToolModifiedState(BlockState blockState, Level level, BlockPos pos,
             Player player, ItemStack tool, ToolAction toolAction) {
 
         if (tool.canPerformAction(toolAction) && ToolActions.AXE_STRIP.equals(toolAction)) {
             if (!level.isClientSide()) {
-                dropStripResources(blockState, level, position, player, tool);
+                dropStripResources(blockState, level, pos, player, tool);
             }
             return strip(blockState);
         } else {
-            return super.getToolModifiedState(blockState, level, position, player, tool, toolAction);
+            return super.getToolModifiedState(blockState, level, pos, player, tool, toolAction);
         }
     }
 
     /**
-     * Triggers a bark explosion at {@code position}.
+     * Triggers a bark explosion at {@code pos}.
      * If {@code blockState} is a {@code BoomLogBlock}, it is stripped of its bark.
      * This method causes neighboring {@code BoomLogBlock} blocks to explode as well.
      *
      * @param blockState  the {@code BlockState} of the block to explode
      * @param level  the level in which the block exists
-     * @param position  the position of the block
+     * @param pos  the position of the block
      */
-    public void triggerExplosion(BlockState blockState, Level level, BlockPos position) {
-        explode(level, position);
+    public void triggerExplosion(BlockState blockState, Level level, BlockPos pos) {
+        explode(level, pos);
 
         if (blockState.getBlock() instanceof BoomLogBlock) {
             BlockState strippedState = strip(blockState);
-            level.setBlockAndUpdate(position, strippedState);
+            level.setBlockAndUpdate(pos, strippedState);
         }
 
-        triggerNeighbors(level, position);
+        triggerNeighbors(level, pos);
     }
 
     /**
      * Generates the explosion used as the bark explosion for blocks of this class.
      *
      * @param level  the level in which to generate the explosion
-     * @param position  the position of the block to explode
+     * @param pos  the position of the block to explode
      */
-    public void explode(Level level, BlockPos position) {
-        Vec3 center = Vec3.atCenterOf(position);
+    public void explode(Level level, BlockPos pos) {
+        Vec3 center = Vec3.atCenterOf(pos);
         float radius = 1.5F;
         Explosion.BlockInteraction interaction = Explosion.BlockInteraction.NONE;
 
@@ -246,16 +246,16 @@ public class BoomLogBlock extends RotatedPillarBlock {
 
     /**
      * Calls {@link #triggerExplosion(BlockState, Level, BlockPos)} on all {@link BoomLogBlock BoomLogBlocks}
-     * neighboring {@code position}.
+     * neighboring {@code pos}.
      *
      * <p>This may trigger a chain reaction.
      *
-     * @param level  the level in which {@code position} exists
-     * @param position  the position whose neighbors should be triggered
+     * @param level  the level in which {@code pos} exists
+     * @param pos  the position whose neighbors should be triggered
      */
-    public void triggerNeighbors(Level level, BlockPos position) {
+    public void triggerNeighbors(Level level, BlockPos pos) {
         for (Direction direction : Direction.values()) {
-            BlockPos neighborPos = position.relative(direction);
+            BlockPos neighborPos = pos.relative(direction);
             BlockState neighborState = level.getBlockState(neighborPos);
             if (neighborState.getBlock() instanceof BoomLogBlock) {
                 BoomLogBlock neighborBlock = (BoomLogBlock) neighborState.getBlock();
@@ -269,18 +269,18 @@ public class BoomLogBlock extends RotatedPillarBlock {
      *
      * @param blockState  the {@code BlockState} of the block that was stripped
      * @param level  the level in which the block exists
-     * @param position  the position of the block
+     * @param pos  the position of the block
      * @param harvester  the entity who stripped the bark
      * @param tool  the tool used to strip the bark
      */
-    public void dropStripResources(BlockState blockState, Level level, BlockPos position,
+    public void dropStripResources(BlockState blockState, Level level, BlockPos pos,
             @Nullable Entity harvester, ItemStack tool) {
 
-        List<ItemStack> drops = getStripDrops(blockState, level, position, harvester, tool);
-        Vec3 vectorToPlayer = Vec3.atCenterOf(position).vectorTo(harvester.position());
+        List<ItemStack> drops = getStripDrops(blockState, level, pos, harvester, tool);
+        Vec3 vectorToPlayer = Vec3.atCenterOf(pos).vectorTo(harvester.position());
         Direction direction = Direction.getNearest(vectorToPlayer.x, vectorToPlayer.y, vectorToPlayer.z);
 
-        drops.forEach(drop -> popResourceFromFace(level, position, direction, drop));
+        drops.forEach(drop -> popResourceFromFace(level, pos, direction, drop));
     }
 
     /**
@@ -312,12 +312,12 @@ public class BoomLogBlock extends RotatedPillarBlock {
      *
      * @param blockState  the {@code BlockState} of the block that was stripped
      * @param level  the level in which the block exists
-     * @param position  the position of the block
+     * @param pos  the position of the block
      * @param harvester  the entity who stripped the bark
      * @param tool  the tool used to strip the bark
      * @return drops for the stripping of this block
      */
-    public List<ItemStack> getStripDrops(BlockState blockState, Level level, BlockPos position,
+    public List<ItemStack> getStripDrops(BlockState blockState, Level level, BlockPos pos,
             @Nullable Entity harvester, ItemStack tool) {
 
         LootTable lootTable = getStripLootTable(level.getServer());
@@ -325,7 +325,7 @@ public class BoomLogBlock extends RotatedPillarBlock {
         LootContext.Builder lootBuilder = (new LootContext.Builder((ServerLevel) level))
                 .withRandom(level.random)
                 .withParameter(LootContextParams.BLOCK_STATE, blockState)
-                .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(position))
+                .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
                 .withParameter(LootContextParams.TOOL, tool)
                 .withOptionalParameter(LootContextParams.THIS_ENTITY, harvester);
 
