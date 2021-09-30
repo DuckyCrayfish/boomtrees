@@ -200,20 +200,23 @@ public class BoomLogBlock extends RotatedPillarBlock {
         triggerNeighbors(level, position);
     }
 
+    /**
+     * Calls {@link #explode(BlockState, Level, BlockPos)} on all {@link BoomLogBlock BoomLogBlocks}
+     * neighboring {@code position}.
+     *
+     * <p>This may trigger a chain reaction.
+     *
+     * @param level  the level in which {@code position} exists
+     * @param position  the position whose neighbors should be triggered
+     */
     public void triggerNeighbors(Level level, BlockPos position) {
-        triggerNeighbor(level, position.west());
-        triggerNeighbor(level, position.east());
-        triggerNeighbor(level, position.below());
-        triggerNeighbor(level, position.above());
-        triggerNeighbor(level, position.north());
-        triggerNeighbor(level, position.south());
-    }
-
-    public void triggerNeighbor(Level level, BlockPos position) {
-        Block block = level.getBlockState(position).getBlock();
-        if (block instanceof BoomLogBlock) {
-            BoomLogBlock log = (BoomLogBlock) block;
-            log.explode(level.getBlockState(position), level, position);
+        for (Direction direction : Direction.values()) {
+            BlockPos neighborPos = position.relative(direction);
+            BlockState neighborState = level.getBlockState(neighborPos);
+            if (neighborState.getBlock() instanceof BoomLogBlock) {
+                BoomLogBlock neighborBlock = (BoomLogBlock) neighborState.getBlock();
+                neighborBlock.explode(neighborState, level, neighborPos);
+            }
         }
     }
 
