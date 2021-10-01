@@ -65,6 +65,9 @@ public class ModConfiguredFeatures {
     public static final ConfiguredFeature<?, ?> CRIMSON_FOREST_BOOMFUNGI = register("crimson_forest_boomfungi", CRIMSON_BOOMFUNGUS.decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(4))));
     public static final ConfiguredFeature<?, ?> WARPED_FOREST_BOOMFUNGI = register("warped_forest_boomfungi", WARPED_BOOMFUNGUS.decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(4))));
 
+    public static final ConfiguredFeature<?, ?> CRIMSON_FUNGI =  Feature.HUGE_FUNGUS.configured(HugeFungusConfiguration.HUGE_CRIMSON_FUNGI_NOT_PLANTED_CONFIG).decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(4)));
+    public static final ConfiguredFeature<?, ?> WARPED_FUNGI = Feature.HUGE_FUNGUS.configured(HugeFungusConfiguration.HUGE_WARPED_FUNGI_NOT_PLANTED_CONFIG).decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(4)));
+
     /**
      * Called by Forge during mod setup. Registers all features listed in this class.
      * @param event  the event provided by the mod event bus

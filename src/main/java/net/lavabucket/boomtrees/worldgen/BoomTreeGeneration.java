@@ -19,10 +19,18 @@
 
 package net.lavabucket.boomtrees.worldgen;
 
+import java.util.List;
+import java.util.function.Supplier;
+
 import net.lavabucket.boomtrees.registry.ModConfiguredFeatures;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.DecoratedFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.DecoratedFeatureConfiguration;
+import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -38,13 +46,57 @@ public class BoomTreeGeneration {
     @SubscribeEvent
     public static void onBiomeLoadingEvent(BiomeLoadingEvent event) {
         ResourceLocation biome = event.getName();
+        BiomeGenerationSettingsBuilder generation = event.getGeneration();
+
         if (biome.equals(Biomes.FOREST.location())) {
-            event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.FOREST_BOOMTREES);
+            modifyForest(generation);
         } else if (biome.equals(Biomes.CRIMSON_FOREST.location())) {
-            event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.CRIMSON_FOREST_BOOMFUNGI);
+            modifyCrimsonForest(generation);
         } else if (biome.equals(Biomes.WARPED_FOREST.location())) {
-            event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.WARPED_FOREST_BOOMFUNGI);
+            modifyWarpedForest(generation);
         }
+    }
+
+    private static void modifyForest(BiomeGenerationSettingsBuilder generation) {
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.FOREST_BOOMTREES);
+    }
+
+    private static void modifyCrimsonForest(BiomeGenerationSettingsBuilder generation) {
+        List<Supplier<ConfiguredFeature<?, ?>>> features = generation.getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION);
+
+        for (Supplier<ConfiguredFeature<?, ?>> feature : features) {
+            Feature<?> baseFeature = unwrapFeature(feature.get());
+            if (baseFeature.equals(Feature.HUGE_FUNGUS)) {
+                features.remove(feature);
+                features.add(() -> ModConfiguredFeatures.CRIMSON_FUNGI);
+                break;
+            }
+        }
+
+        features.add(() -> ModConfiguredFeatures.CRIMSON_FOREST_BOOMFUNGI);
+    }
+
+    private static void modifyWarpedForest(BiomeGenerationSettingsBuilder generation) {
+        List<Supplier<ConfiguredFeature<?, ?>>> features = generation.getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION);
+
+        for (Supplier<ConfiguredFeature<?, ?>> feature : features) {
+            Feature<?> baseFeature = unwrapFeature(feature.get());
+            if (baseFeature.equals(Feature.HUGE_FUNGUS)) {
+                features.remove(feature);
+                features.add(() -> ModConfiguredFeatures.WARPED_FUNGI);
+                break;
+            }
+        }
+
+        features.add(() -> ModConfiguredFeatures.WARPED_FOREST_BOOMFUNGI);
+    }
+
+    private static Feature<?> unwrapFeature(ConfiguredFeature<?, ?> feature) {
+        while (feature.feature() instanceof DecoratedFeature) {
+            feature = ((DecoratedFeatureConfiguration)feature.config()).feature.get();
+        }
+
+        return feature.feature();
     }
 
 }
