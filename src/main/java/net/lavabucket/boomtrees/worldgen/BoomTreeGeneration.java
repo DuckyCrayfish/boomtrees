@@ -20,6 +20,8 @@
 package net.lavabucket.boomtrees.worldgen;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import net.lavabucket.boomtrees.registry.ModConfiguredFeatures;
@@ -58,20 +60,19 @@ public class BoomTreeGeneration {
     }
 
     private static void modifyForest(BiomeGenerationSettingsBuilder generation) {
-        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.FOREST_BOOMTREES);
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
+                ModConfiguredFeatures.FOREST_BOOMTREES);
     }
 
     private static void modifyCrimsonForest(BiomeGenerationSettingsBuilder generation) {
-        List<Supplier<ConfiguredFeature<?, ?>>> features = generation.getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION);
+        List<Supplier<ConfiguredFeature<?, ?>>> features =
+                generation.getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION);
 
-        for (Supplier<ConfiguredFeature<?, ?>> feature : features) {
-            Feature<?> baseFeature = unwrapFeature(feature.get());
-            if (baseFeature.equals(Feature.HUGE_FUNGUS)) {
-                features.remove(feature);
-                features.add(() -> ModConfiguredFeatures.CRIMSON_FUNGI);
-                break;
-            }
-        }
+        findFeature(features, feature -> isFeature(feature.get(), Feature.HUGE_FUNGUS))
+                .ifPresent(fungiFeature -> {
+                    features.remove(fungiFeature);
+                    features.add(() -> ModConfiguredFeatures.CRIMSON_FUNGI);
+                });
 
         features.add(() -> ModConfiguredFeatures.CRIMSON_FOREST_BOOMFUNGI);
     }
@@ -79,24 +80,47 @@ public class BoomTreeGeneration {
     private static void modifyWarpedForest(BiomeGenerationSettingsBuilder generation) {
         List<Supplier<ConfiguredFeature<?, ?>>> features = generation.getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION);
 
-        for (Supplier<ConfiguredFeature<?, ?>> feature : features) {
-            Feature<?> baseFeature = unwrapFeature(feature.get());
-            if (baseFeature.equals(Feature.HUGE_FUNGUS)) {
-                features.remove(feature);
-                features.add(() -> ModConfiguredFeatures.WARPED_FUNGI);
-                break;
-            }
-        }
+        findFeature(features, feature -> isFeature(feature.get(), Feature.HUGE_FUNGUS))
+                .ifPresent(fungiFeature -> {
+                    features.remove(fungiFeature);
+                    features.add(() -> ModConfiguredFeatures.WARPED_FUNGI);
+                });
 
         features.add(() -> ModConfiguredFeatures.WARPED_FOREST_BOOMFUNGI);
     }
 
-    private static Feature<?> unwrapFeature(ConfiguredFeature<?, ?> feature) {
-        while (feature.feature() instanceof DecoratedFeature) {
-            feature = ((DecoratedFeatureConfiguration)feature.config()).feature.get();
+    /*
+     * Checks if configuredFeature is a version of feature. Accounts for configuredFeature
+     * decorations.
+     */
+    private static boolean isFeature(ConfiguredFeature<?, ?> configuredFeature,
+            Feature<?> feature) {
+
+        if (configuredFeature.feature().equals(feature)) {
+            return true;
         }
 
-        return feature.feature();
+        while (configuredFeature.feature() instanceof DecoratedFeature) {
+            DecoratedFeatureConfiguration decorated =
+                    (DecoratedFeatureConfiguration) configuredFeature.config();
+
+            configuredFeature = decorated.feature.get();
+            if (configuredFeature.feature().equals(feature)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /*
+     * Returns an Optional feature that matches predicate from featureList.
+     */
+    private static Optional<Supplier<ConfiguredFeature<?, ?>>> findFeature(
+                List<Supplier<ConfiguredFeature<?, ?>>> featureList,
+                Predicate<Supplier<ConfiguredFeature<?, ?>>> predicate) {
+
+        return featureList.stream().filter(predicate).findFirst();
     }
 
 }
