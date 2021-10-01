@@ -20,6 +20,7 @@
 package net.lavabucket.boomtrees.worldgen;
 
 import net.lavabucket.boomtrees.registry.ModConfiguredFeatures;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -36,8 +37,13 @@ public class BoomTreeGeneration {
      */
     @SubscribeEvent
     public static void onBiomeLoadingEvent(BiomeLoadingEvent event) {
-        if (event.getName().equals(Biomes.FOREST.location())) {
+        ResourceLocation biome = event.getName();
+        if (biome.equals(Biomes.FOREST.location())) {
             event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.FOREST_BOOMTREES);
+        } else if (biome.equals(Biomes.CRIMSON_FOREST.location())) {
+            event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.CRIMSON_FOREST_BOOMFUNGI);
+        } else if (biome.equals(Biomes.WARPED_FOREST.location())) {
+            event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, ModConfiguredFeatures.WARPED_FOREST_BOOMFUNGI);
         }
     }
 
