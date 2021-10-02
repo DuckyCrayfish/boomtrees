@@ -30,9 +30,15 @@ import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
 /** A stripped {@code BoomLog}. Regrows back into a BoomLog. */
 public class StrippedBoomLogBlock extends RotatedPillarBlock {
+
+    public static final int MAX_AGE = BlockStateProperties.MAX_AGE_2;
+    public static final IntegerProperty AGE = BlockStateProperties.AGE_2;
 
     private final int flammability;
     private final int fireSpreadSpeed;
@@ -63,6 +69,17 @@ public class StrippedBoomLogBlock extends RotatedPillarBlock {
         this.regrown = regrown;
         this.flammability = flammability;
         this.fireSpreadSpeed = fireSpreadSpeed;
+        registerDefaultState(defaultBlockState().setValue(AGE, 0));
+    }
+
+    /**
+     * Adds all of this block's properties to the definition of its BlockStates.
+     * @param builder  the state definition builder
+     */
+    @Override
+    protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(AGE);
     }
 
     /** {@return the flammability of this block} */
@@ -89,14 +106,32 @@ public class StrippedBoomLogBlock extends RotatedPillarBlock {
      */
     @Override
     public void tick(BlockState blockState, ServerLevel level, BlockPos pos, Random random) {
-        if (!hasFireAdjacent(level, pos)) {
-            level.setBlockAndUpdate(pos, regrow(blockState));
+        if (hasFireAdjacent(level, pos)) {
+            return;
+        }
+
+        level.setBlockAndUpdate(pos, age(blockState));
+    }
+
+    /**
+     * Returns the {@code BlockState} for {@code blockState} after being aged once.
+     * If {@code blockState} is already maximum age, returns regrown version.
+     *
+     * @param blockState  the {@code BlockState} to age
+     * @return a {@code BlockState} with an age 1 greater than {@code blockState}, or regrown
+     * {@code BlockState} if age is max
+     */
+    public BlockState age(BlockState blockState) {
+        int age = blockState.getValue(AGE);
+        if (age < MAX_AGE) {
+            return blockState.setValue(AGE, Integer.valueOf(age + 1));
+        } else {
+            return regrow(blockState);
         }
     }
 
     /**
      * Returns the regrown version of {@code blockState}.
-     * Assumes {@code blockState} is an instance of this block.
      *
      * @param blockState  the {@code BlockState} to convert to a regrown version
      * @return  the regrown version of {@code blockState}
