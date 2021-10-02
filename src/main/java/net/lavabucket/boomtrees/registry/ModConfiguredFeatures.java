@@ -21,6 +21,7 @@ package net.lavabucket.boomtrees.registry;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import net.lavabucket.boomtrees.BoomTrees;
 import net.minecraft.core.Registry;
@@ -54,16 +55,16 @@ public class ModConfiguredFeatures {
     }
 
     public static final ConfiguredFeature<TreeConfiguration, ?> OAK_BOOMTREE = register("oak_boomtree", Feature.TREE.configured((new TreeConfiguration.TreeConfigurationBuilder(new SimpleStateProvider(ModBlocks.OAK_BOOMLOG.get().defaultBlockState()), new StraightTrunkPlacer(5, 2, 0), new SimpleStateProvider(Blocks.OAK_LEAVES.defaultBlockState()), new SimpleStateProvider(Blocks.OAK_SAPLING.defaultBlockState()), new BlobFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0), 3), new TwoLayersFeatureSize(1, 0, 1))).ignoreVines().build()));
-
     public static final ConfiguredFeature<?, ?> CRIMSON_BOOMFUNGUS = register("crimson_boomfungus", Feature.HUGE_FUNGUS.configured(new HugeFungusConfiguration(Blocks.CRIMSON_NYLIUM.defaultBlockState(), ModBlocks.CRIMSON_BOOMSTEM.get().defaultBlockState(), Blocks.NETHER_WART_BLOCK.defaultBlockState(), Blocks.SHROOMLIGHT.defaultBlockState(), false)));
     public static final ConfiguredFeature<?, ?> WARPED_BOOMFUNGUS = register("warped_boomfungus", Feature.HUGE_FUNGUS.configured(new HugeFungusConfiguration(Blocks.WARPED_NYLIUM.defaultBlockState(), ModBlocks.WARPED_BOOMSTEM.get().defaultBlockState(), Blocks.WARPED_WART_BLOCK.defaultBlockState(), Blocks.SHROOMLIGHT.defaultBlockState(), false)));
+    public static final ConfiguredFeature<?, ?> CRIMSON_FUNGUS = register("crimson_fungus", Feature.HUGE_FUNGUS.configured(HugeFungusConfiguration.HUGE_CRIMSON_FUNGI_NOT_PLANTED_CONFIG));
+    public static final ConfiguredFeature<?, ?> WARPED_FUNGUS = register("warped_fungus", Feature.HUGE_FUNGUS.configured(HugeFungusConfiguration.HUGE_WARPED_FUNGI_NOT_PLANTED_CONFIG));
 
-    public static final ConfiguredFeature<?, ?> FOREST_BOOMTREES = register("forest_boomtrees", OAK_BOOMTREE.decorated(Features.Decorators.HEIGHTMAP_WITH_TREE_THRESHOLD_SQUARED).rarity(8));
-    public static final ConfiguredFeature<?, ?> CRIMSON_FOREST_BOOMFUNGI = register("crimson_forest_boomfungi", CRIMSON_BOOMFUNGUS.decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(4))));
-    public static final ConfiguredFeature<?, ?> WARPED_FOREST_BOOMFUNGI = register("warped_forest_boomfungi", WARPED_BOOMFUNGUS.decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(4))));
-
-    public static final ConfiguredFeature<?, ?> CRIMSON_FUNGI =  Feature.HUGE_FUNGUS.configured(HugeFungusConfiguration.HUGE_CRIMSON_FUNGI_NOT_PLANTED_CONFIG).decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(4)));
-    public static final ConfiguredFeature<?, ?> WARPED_FUNGI = Feature.HUGE_FUNGUS.configured(HugeFungusConfiguration.HUGE_WARPED_FUNGI_NOT_PLANTED_CONFIG).decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(4)));
+    public static final Supplier<ConfiguredFeature<?, ?>> FOREST_BOOMTREES = () -> OAK_BOOMTREE.decorated(Features.Decorators.HEIGHTMAP_WITH_TREE_THRESHOLD_SQUARED).rarity(8);
+    public static final Supplier<ConfiguredFeature<?, ?>> CRIMSON_FOREST_BOOMFUNGI = () -> CRIMSON_BOOMFUNGUS.decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(4)));
+    public static final Supplier<ConfiguredFeature<?, ?>> WARPED_FOREST_BOOMFUNGI = () -> WARPED_BOOMFUNGUS.decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(4)));
+    public static final Supplier<ConfiguredFeature<?, ?>> CRIMSON_FOREST_FUNGI = () -> CRIMSON_FUNGUS.decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(4)));
+    public static final Supplier<ConfiguredFeature<?, ?>> WARPED_FOREST_FUNGI = () -> WARPED_FUNGUS.decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(4)));
 
     /**
      * Called by Forge during mod setup. Registers all features listed in this class.

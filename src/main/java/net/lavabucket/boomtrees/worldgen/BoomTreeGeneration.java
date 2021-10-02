@@ -61,7 +61,7 @@ public class BoomTreeGeneration {
 
     private static void modifyForest(BiomeGenerationSettingsBuilder generation) {
         generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
-                ModConfiguredFeatures.FOREST_BOOMTREES);
+                ModConfiguredFeatures.FOREST_BOOMTREES.get());
     }
 
     private static void modifyCrimsonForest(BiomeGenerationSettingsBuilder generation) {
@@ -71,22 +71,23 @@ public class BoomTreeGeneration {
         findFeature(features, feature -> isFeature(feature.get(), Feature.HUGE_FUNGUS))
                 .ifPresent(fungiFeature -> {
                     features.remove(fungiFeature);
-                    features.add(() -> ModConfiguredFeatures.CRIMSON_FUNGI);
+                    features.add(() -> ModConfiguredFeatures.CRIMSON_FOREST_FUNGI.get());
                 });
 
-        features.add(() -> ModConfiguredFeatures.CRIMSON_FOREST_BOOMFUNGI);
+        features.add(() -> ModConfiguredFeatures.CRIMSON_FOREST_BOOMFUNGI.get());
     }
 
     private static void modifyWarpedForest(BiomeGenerationSettingsBuilder generation) {
-        List<Supplier<ConfiguredFeature<?, ?>>> features = generation.getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION);
+        List<Supplier<ConfiguredFeature<?, ?>>> features =
+                generation.getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION);
 
         findFeature(features, feature -> isFeature(feature.get(), Feature.HUGE_FUNGUS))
                 .ifPresent(fungiFeature -> {
                     features.remove(fungiFeature);
-                    features.add(() -> ModConfiguredFeatures.WARPED_FUNGI);
+                    features.add(() -> ModConfiguredFeatures.WARPED_FOREST_FUNGI.get());
                 });
 
-        features.add(() -> ModConfiguredFeatures.WARPED_FOREST_BOOMFUNGI);
+        features.add(() -> ModConfiguredFeatures.WARPED_FOREST_BOOMFUNGI.get());
     }
 
     /*
