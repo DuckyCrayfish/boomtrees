@@ -70,8 +70,7 @@ public class Config {
 
             builder.push("worldgen"); // worldgen
 
-                builder.comment("Oak BoomTrees");
-                builder.comment("These spawn in the Forest biome.");
+                builder.comment("Oak BoomTrees. These spawn in the Forest biome.");
                 builder.push("oak"); // worldgen.oak
 
                     oakSpawn = builder
@@ -84,8 +83,7 @@ public class Config {
 
                 builder.pop(); // worlgen.oak
 
-                builder.comment("Crimson BoomFungi");
-                builder.comment("These spawn in the Crimson Forest biome.");
+                builder.comment("Crimson BoomFungi. These spawn in the Crimson Forest biome.");
                 builder.push("crimson"); // worldgen.crimson
 
                     crimsonSpawn = builder
@@ -99,8 +97,7 @@ public class Config {
 
                 builder.pop(); // worlgen.crimson
 
-                builder.comment("Warped BoomFungi");
-                builder.comment("These spawn in the Warped Forest biome.");
+                builder.comment("Warped BoomFungi. These spawn in the Warped Forest biome.");
                 builder.push("warped"); // worldgen.warped
 
                     warpedSpawn = builder
