@@ -19,6 +19,7 @@
 
 package net.lavabucket.boomtrees;
 
+import net.lavabucket.boomtrees.config.Config;
 import net.lavabucket.boomtrees.registry.ModBlocks;
 import net.lavabucket.boomtrees.registry.ModConfiguredFeatures;
 import net.lavabucket.boomtrees.registry.ModItems;
@@ -47,6 +48,7 @@ public class BoomTrees {
         modBus.register(ModBlocks.class);
         modBus.register(ModConfiguredFeatures.class);
         modBus.register(ModItems.class);
+        modBus.register(Config.class);
 
         forgeBus.register(BoomTreeGeneration.class);
     }

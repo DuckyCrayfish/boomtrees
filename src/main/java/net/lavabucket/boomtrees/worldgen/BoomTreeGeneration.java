@@ -19,15 +19,19 @@
 
 package net.lavabucket.boomtrees.worldgen;
 
+import static net.minecraft.world.level.levelgen.GenerationStep.Decoration.VEGETAL_DECORATION;
+
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import net.lavabucket.boomtrees.config.Config;
 import net.lavabucket.boomtrees.registry.ModConfiguredFeatures;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biomes;
-import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.DecoratedFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -39,6 +43,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 /** This class handles natural BoomTree generation in the world. */
 public class BoomTreeGeneration {
 
+    private static final Map<ResourceLocation, Consumer<BiomeGenerationSettingsBuilder>> modifiers = Map.ofEntries(
+        Map.entry(Biomes.FOREST.location(), BoomTreeGeneration::modifyForest),
+        Map.entry(Biomes.CRIMSON_FOREST.location(), BoomTreeGeneration::modifyCrimsonForest),
+        Map.entry(Biomes.WARPED_FOREST.location(), BoomTreeGeneration::modifyWarpedForest)
+    );
+
     /**
      * Called when a biome configuration is being loaded for a world. All biome tree modifications
      * are initiated here.
@@ -49,24 +59,25 @@ public class BoomTreeGeneration {
     public static void onBiomeLoadingEvent(BiomeLoadingEvent event) {
         ResourceLocation biome = event.getName();
         BiomeGenerationSettingsBuilder generation = event.getGeneration();
-
-        if (biome.equals(Biomes.FOREST.location())) {
-            modifyForest(generation);
-        } else if (biome.equals(Biomes.CRIMSON_FOREST.location())) {
-            modifyCrimsonForest(generation);
-        } else if (biome.equals(Biomes.WARPED_FOREST.location())) {
-            modifyWarpedForest(generation);
+        Consumer<BiomeGenerationSettingsBuilder> modifier = modifiers.get(biome);
+        if (modifier != null) {
+            modifier.accept(generation);
         }
     }
 
     private static void modifyForest(BiomeGenerationSettingsBuilder generation) {
-        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
-                ModConfiguredFeatures.FOREST_BOOMTREES.get());
+        if (Config.COMMON.oakSpawn.get()) {
+            generation.addFeature(VEGETAL_DECORATION, ModConfiguredFeatures.OAK_BOOMTREES.get());
+        }
     }
 
     private static void modifyCrimsonForest(BiomeGenerationSettingsBuilder generation) {
+        if (!Config.COMMON.crimsonSpawn.get()) {
+            return;
+        }
+
         List<Supplier<ConfiguredFeature<?, ?>>> features =
-                generation.getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION);
+                generation.getFeatures(VEGETAL_DECORATION);
 
         findFeature(features, feature -> isFeature(feature.get(), Feature.HUGE_FUNGUS))
                 .ifPresent(fungiFeature -> {
@@ -78,8 +89,12 @@ public class BoomTreeGeneration {
     }
 
     private static void modifyWarpedForest(BiomeGenerationSettingsBuilder generation) {
+        if (!Config.COMMON.warpedSpawn.get()) {
+            return;
+        }
+
         List<Supplier<ConfiguredFeature<?, ?>>> features =
-                generation.getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION);
+                generation.getFeatures(VEGETAL_DECORATION);
 
         findFeature(features, feature -> isFeature(feature.get(), Feature.HUGE_FUNGUS))
                 .ifPresent(fungiFeature -> {
