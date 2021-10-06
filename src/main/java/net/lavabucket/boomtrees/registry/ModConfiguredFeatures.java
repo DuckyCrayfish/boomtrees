@@ -25,6 +25,7 @@ import java.util.function.Supplier;
 
 import net.lavabucket.boomtrees.BoomTrees;
 import net.lavabucket.boomtrees.config.Config;
+import net.lavabucket.boomtrees.valueproviders.FloatEquivalentInt;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.worldgen.Features;
@@ -63,10 +64,10 @@ public class ModConfiguredFeatures {
 
     private static final int TOTAL_FUNGUS_COUNT = 8;
     public static final Supplier<ConfiguredFeature<?, ?>> OAK_BOOMTREES = () -> OAK_BOOMTREE.decorated(Features.Decorators.HEIGHTMAP_WITH_TREE_THRESHOLD_SQUARED).rarity(Config.COMMON.oakRarity.get());
-    public static final Supplier<ConfiguredFeature<?, ?>> CRIMSON_FOREST_BOOMFUNGI = () -> CRIMSON_BOOMFUNGUS.decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration((int) (TOTAL_FUNGUS_COUNT * Config.COMMON.crimsonRatio.get()))));
-    public static final Supplier<ConfiguredFeature<?, ?>> WARPED_FOREST_BOOMFUNGI = () -> WARPED_BOOMFUNGUS.decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration((int) (TOTAL_FUNGUS_COUNT * Config.COMMON.warpedRatio.get()))));
-    public static final Supplier<ConfiguredFeature<?, ?>> CRIMSON_FOREST_FUNGI = () -> CRIMSON_FUNGUS.decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(TOTAL_FUNGUS_COUNT - (int) (TOTAL_FUNGUS_COUNT * Config.COMMON.crimsonRatio.get()))));
-    public static final Supplier<ConfiguredFeature<?, ?>> WARPED_FOREST_FUNGI = () -> WARPED_FUNGUS.decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(TOTAL_FUNGUS_COUNT - (int) (TOTAL_FUNGUS_COUNT * Config.COMMON.warpedRatio.get()))));
+    public static final Supplier<ConfiguredFeature<?, ?>> CRIMSON_FOREST_BOOMFUNGI = () -> CRIMSON_BOOMFUNGUS.decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(FloatEquivalentInt.of(TOTAL_FUNGUS_COUNT * Config.COMMON.crimsonRatio.get().floatValue()))));
+    public static final Supplier<ConfiguredFeature<?, ?>> WARPED_FOREST_BOOMFUNGI = () -> WARPED_BOOMFUNGUS.decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(FloatEquivalentInt.of(TOTAL_FUNGUS_COUNT * Config.COMMON.warpedRatio.get().floatValue()))));
+    public static final Supplier<ConfiguredFeature<?, ?>> CRIMSON_FOREST_FUNGI = () -> CRIMSON_FUNGUS.decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(FloatEquivalentInt.of(TOTAL_FUNGUS_COUNT * (1 - Config.COMMON.crimsonRatio.get().floatValue())))));
+    public static final Supplier<ConfiguredFeature<?, ?>> WARPED_FOREST_FUNGI = () -> WARPED_FUNGUS.decorated(FeatureDecorator.COUNT_MULTILAYER.configured(new CountConfiguration(FloatEquivalentInt.of(TOTAL_FUNGUS_COUNT * (1 - Config.COMMON.warpedRatio.get().floatValue())))));
 
     /**
      * Called by Forge during mod setup. Registers all features listed in this class.
