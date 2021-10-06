@@ -40,7 +40,7 @@ public class StrippedBoomLogBlock extends RotatedPillarBlock {
     private static final IntegerProperty AGE = BlockStateProperties.AGE_2;
     private static final int AGE_MAX = BlockStateProperties.MAX_AGE_2;
 
-    protected final Block regrown;
+    protected final Supplier<Block> regrown;
 
     private final int flammability;
     private final int fireSpreadSpeed;
@@ -67,7 +67,7 @@ public class StrippedBoomLogBlock extends RotatedPillarBlock {
             Properties properties) {
 
         super(properties);
-        this.regrown = regrown.get();
+        this.regrown = regrown;
         this.flammability = flammability;
         this.fireSpreadSpeed = fireSpreadSpeed;
     }
@@ -165,7 +165,7 @@ public class StrippedBoomLogBlock extends RotatedPillarBlock {
      * @return  the regrown version of {@code blockState}
      */
     public BlockState regrow(BlockState blockState) {
-        return regrown.withPropertiesOf(blockState);
+        return regrown.get().withPropertiesOf(blockState);
     }
 
     private boolean hasFireAdjacent(ServerLevel level, BlockPos pos) {
