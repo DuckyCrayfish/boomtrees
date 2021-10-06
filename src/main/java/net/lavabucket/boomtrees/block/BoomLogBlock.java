@@ -62,7 +62,7 @@ public class BoomLogBlock extends RotatedPillarBlock {
     private static final float EXPLOSION_RADIUS = 1.5F;
     private static final BlockInteraction EXPLOSION_INTERACTION = BlockInteraction.NONE;
 
-    private final Supplier<Block> stripped;
+    private final Block stripped;
     private final int flammability;
     private final int fireSpreadSpeed;
 
@@ -88,7 +88,7 @@ public class BoomLogBlock extends RotatedPillarBlock {
             Properties properties) {
 
         super(properties);
-        this.stripped = stripped;
+        this.stripped = stripped.get();
         this.flammability = flammability;
         this.fireSpreadSpeed = fireSpreadSpeed;
     }
@@ -347,8 +347,7 @@ public class BoomLogBlock extends RotatedPillarBlock {
      * @param blockState  the state of the block to be stripped
      */
     public BlockState strip(BlockState blockState) {
-        return stripped.get().defaultBlockState()
-                .setValue(RotatedPillarBlock.AXIS, blockState.getValue(RotatedPillarBlock.AXIS));
+        return stripped.withPropertiesOf(blockState);
     }
 
 }
