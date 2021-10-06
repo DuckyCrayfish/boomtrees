@@ -22,6 +22,7 @@ package net.lavabucket.boomtrees.config;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
+import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.config.ModConfig;
@@ -57,7 +58,9 @@ public class Config {
         public final BooleanValue oakSpawn;
         public final IntValue oakRarity;
         public final BooleanValue crimsonSpawn;
+        public final DoubleValue crimsonRatio;
         public final BooleanValue warpedSpawn;
+        public final DoubleValue warpedRatio;
 
         /**
          * Constructs an instance of a common config.
@@ -68,6 +71,7 @@ public class Config {
             builder.push("worldgen"); // worldgen
 
                 builder.comment("Oak BoomTrees");
+                builder.comment("These spawn in the Forest biome.");
                 builder.push("oak"); // worldgen.oak
 
                     oakSpawn = builder
@@ -81,20 +85,32 @@ public class Config {
                 builder.pop(); // worlgen.oak
 
                 builder.comment("Crimson BoomFungi");
+                builder.comment("These spawn in the Crimson Forest biome.");
                 builder.push("crimson"); // worldgen.crimson
 
                     crimsonSpawn = builder
                         .comment("Whether or not to spawn this type of BoomTree.")
                         .define("spawn", true);
 
+                    crimsonRatio = builder.comment(
+                            "The ratio of Crimson Fungi that should be generated as Crimson BoomFungi.",
+                            "A value of 1.0 means that all Crimson Fungi that are generated in the Crimson Forest biome will be BoomFungi.")
+                        .defineInRange("ratio", 0.5D, 0, 1);
+
                 builder.pop(); // worlgen.crimson
 
                 builder.comment("Warped BoomFungi");
+                builder.comment("These spawn in the Warped Forest biome.");
                 builder.push("warped"); // worldgen.warped
 
                     warpedSpawn = builder
                         .comment("Whether or not to spawn this type of BoomTree.")
                         .define("spawn", true);
+
+                    warpedRatio = builder.comment(
+                            "The ratio of Warped Fungi that should be generated as Warped BoomFungi.",
+                            "A value of 1.0 means that all Warped Fungi that are generated in the Warped Forest biome will be BoomFungi.")
+                        .defineInRange("ratio", 0.5D, 0, 1);
 
                 builder.pop(); // worlgen.warped
 
